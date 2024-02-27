@@ -155,6 +155,7 @@ void IDFT(complex double *in, int n, complex double *out) {
     }
 }
 
+
 void polynomial_multiply_DFT(complex double *a, complex double *b, int n, complex double *result) {
     
     // Pad the inputs with zeros, the polynomials are represented as arays
