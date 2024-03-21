@@ -17,8 +17,6 @@ unsigned int Bit_Reverse(unsigned int x, int log2n) {
     return n;
 }
 
-// Iterative FFT function to compute the DFT
-// of given coefficient vector
 void Iterative_FFT(complex double* input, int n, int log2n, complex double* output) {
     int reverse_bit;
     // bit reversal of the given array, this step from pseudocode: bit-reverse-copy(a, A)
@@ -33,24 +31,26 @@ void Iterative_FFT(complex double* input, int n, int log2n, complex double* outp
     int fft_segment_length, fft_half_segment_length;
     complex double unity_root_factor, segment_root_of_unity, twiddle_factor, tmp;
     // FFT computation
+    // The outer loop runs log_2(n) times, but within the loops it will cover all n
+    // elements, therefore the runtime is O(n log n) times.
     for (int s = 1; s <= log2n; ++s) {
-        fft_segment_length = pow(2, s);
+        fft_segment_length = 1 << s; // pow(2, s)
          // Principal root of unity for the current segment
         segment_root_of_unity = cexp(-I * TAU / fft_segment_length);
 
         for (int k = 0; k < n; k += fft_segment_length) {
             // Initialize unity root factor (ω) to 1, use 0*I to create complex number
             unity_root_factor = 1 + 0 * I;
-
-            for (int j = 0; j < fft_segment_length / 2; ++j) {
+            fft_half_segment_length = fft_segment_length >> 1; // /2
+            for (int j = 0; j < fft_half_segment_length; ++j) {
                 // Twiddle factor application: https://en.wikipedia.org/wiki/Twiddle_factor
-                complex double twiddle_factor = unity_root_factor *
-                                                output[k + j + fft_segment_length / 2];
-                complex double tmp = output[k + j];
+                twiddle_factor = unity_root_factor *
+                                output[k + j + fft_half_segment_length];
+                tmp = output[k + j];
 
                 // Applying FFT butterfly updates
                 output[k + j] = tmp + twiddle_factor;
-                output[k + j + fft_segment_length / 2] = tmp - twiddle_factor;
+                output[k + j + fft_half_segment_length] = tmp - twiddle_factor;
 
                 // Update the unity root factor
                 unity_root_factor *= segment_root_of_unity;
@@ -81,16 +81,16 @@ void Iterative_IFFT(complex double* input, int n, int log2n, complex double* out
         for (int k = 0; k < n; k += fft_segment_length) {
             // Initialize unity root factor (ω) to 1, use 0*I to create complex number
             unity_root_factor = 1 + 0 * I;
-
-            for (int j = 0; j < fft_segment_length / 2; ++j) {
+            fft_half_segment_length = fft_segment_length >> 1; // /2
+            for (int j = 0; j < fft_half_segment_length; ++j) {
                 // Twiddle factor application: https://en.wikipedia.org/wiki/Twiddle_factor
-                complex double twiddle_factor = unity_root_factor *
-                                                output[k + j + fft_segment_length / 2];
-                complex double tmp = output[k + j];
+                twiddle_factor = unity_root_factor *
+                                output[k + j + fft_half_segment_length];
+                tmp = output[k + j];
 
                 // Applying FFT butterfly updates
                 output[k + j] = tmp + twiddle_factor;
-                output[k + j + fft_segment_length / 2] = tmp - twiddle_factor;
+                output[k + j + fft_half_segment_length] = tmp - twiddle_factor;
 
                 // Update the unity root factor
                 unity_root_factor *= segment_root_of_unity;

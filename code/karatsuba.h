@@ -1,5 +1,5 @@
-#ifndef karasuba_H
-#define karasuba_H
+#ifndef karatsuba_H
+#define karatsuba_H
 
 #include <assert.h>
 #include <stdio.h>
@@ -33,10 +33,10 @@
     
 //     return (z2 × 10 ^ (m2 × 2)) + ((z1 - z2 - z0) × 10 ^ m2) + z0
 
-long Karasuba(long num1, long num2);
+long karatsuba(long num1, long num2);
 
 int get_size(long value);
 
-long polynomial_multiply_Karasuba(complex double *a, complex double *b, int n);
+long polynomial_multiply_karatsuba(complex double *a, complex double *b, int n);
 
 #endif

@@ -6,9 +6,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include "math.h"
 
-#define PI 3.1415926536
-#define TAU PI * 2
+
 
 //Source https://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm
 
