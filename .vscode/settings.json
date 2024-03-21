@@ -3,6 +3,8 @@
         "xiosbase": "c",
         "xlocale": "c",
         "xutility": "c",
-        "cmath": "c"
+        "cmath": "c",
+        "time.h": "c",
+        "complex": "c"
     }
 }

@@ -1,0 +1,6 @@
+DFT is very very slow, not really worth testing
+FFT is the second fastest, seems to be due to memory allocation that slows it down
+Karasuba is the second fastest
+Iterative_FFT that I borrowed from geekforgeeks is fastest
+
+FFT recursive is probably slower due to the memory allocation
