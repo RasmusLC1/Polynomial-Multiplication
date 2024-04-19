@@ -86,7 +86,7 @@ void Recursive_IFFT_ext(complex double *f, int n, complex double *out,
     complex double tmp = 0;
     for (int k = 0; k < n_half; k++) {
         // Use defined TAU to save multiplication and calculate e^{−i*TAU*n/k​}
-        // directly to save calculations
+        // directly in tmp to save calculations
         tmp = cexp(I * TAU * k / n) * out_odd_values[k];
         out[k] = out_even_values[k] + tmp;
         out[k + n_half] = out_even_values[k] - tmp;

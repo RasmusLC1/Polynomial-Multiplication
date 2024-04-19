@@ -12,6 +12,7 @@
 #include <time.h>
 #include "math.h"
 
+
 // Declare the function(s) from dft.c here
 void DFT(complex double *in, int n, complex double *out);
 

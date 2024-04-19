@@ -55,7 +55,7 @@ void Polynomial_Multiply(int n, int iterations) {
         // Time DFT
         // THIS CODE HAS BEEN COMMENTED OUT TO COMPUTATIONAL COST IN TESTING
         start_dft = clock();
-        // result_dft = polynomial_multiply_DFT(a, b, n); 
+        result_dft = polynomial_multiply_DFT(a, b, n); 
         end_dft = clock();
         time_dft += (double)(end_dft - start_dft) / CLOCKS_PER_SEC;
 
@@ -94,7 +94,7 @@ void Polynomial_Multiply(int n, int iterations) {
     time_iterative_fft -= time_default;
     time_karatsuba -= time_default;
     // Output time
-    printf("Default time:\t%f seconds.\n", time_default);
+    printf("n size: %dm\t iterations: %d\n", n, iterations);
     printf("DFT multiplication time:\t%f seconds.\n", time_dft);
     printf("FFT multiplication time:\t%f seconds.\n", time_fft);
     printf("iterative_FFT multiplication time:\t%f seconds.\n", time_iterative_fft);
@@ -125,10 +125,11 @@ void White_Box_Testing() {
     // a[0] = 4; a[1] = 6; a[2] = 5; 
     // b[0] = 4; b[1] = 3; b[2] = 2;
 
-    long result_karatsuba = polynomial_multiply_karatsuba(a, b, n);
 
     // Compute polynomial multiplication using DFT
     long result_dft = polynomial_multiply_DFT(a, b, n); 
+
+    long result_karatsuba = polynomial_multiply_karatsuba(a, b, n);
 
     long result_iterative_fft = polynomial_multiply_iterative_FFT(a, b, n);
 
@@ -136,9 +137,9 @@ void White_Box_Testing() {
     long result_fft = polynomial_multiply_Recursive_FFT(a, b, n);
 
     printf("DFT result:\t%ld\n", result_dft);
+    printf("karatsuba result:\t%ld\n", result_karatsuba);
     printf("FFT result:\t%ld\n", result_fft);
     printf("Iterative FFT result:\t%ld\n", result_iterative_fft);
-    printf("karatsuba result:\t%ld\n", result_karatsuba);
 
 }
 
@@ -147,8 +148,8 @@ void White_Box_Testing() {
 
 int main() {
     int n = 16; // test size needs to be power 2, higher than 16 integer overflow
-    int iterations = 1000000;
-    // Polynomial_Multiply(n, iterations);
-    White_Box_Testing();
+    int iterations = 100000;
+    Polynomial_Multiply(n, iterations);
+    // White_Box_Testing();
     return 0;
 }

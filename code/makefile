@@ -12,7 +12,7 @@ all: $(PROGRAM)
 	@./$(PROGRAM)
 
 $(PROGRAM): $(PROGRAM).c $(OBJS)
-	$(CC) $(CFLAGS) $(PROGRAM).c $(OBJS) -o $(PROGRAM) -lm
+	$(CC) $(CFLAGS) $(PROGRAM).c $(OBJS) -o $(PROGRAM) -lm -lmpfr -lgmp
 
 $(DFT).o: $(DFT).c $(DFT).h
 	$(CC) $(CFLAGS) -c $(DFT).c
