@@ -4,8 +4,20 @@
 #include "karatsuba.h"
 
 
+// // Initialize a and b with inverse number, I.E 27 = a[0] = 7 and a[1] = 2
+    // // Coefficient of x^0 = a[0] and x^1=a[1]
+    // a[0] = 7; a[1] = 2; // Polynomial for 27
+void Int_to_Array(long long input_int, complex double *output_array){
+    int i = 0;
+    while (input_int > 0) {
+        output_array[i++] = input_int % 10; // Store the last digit in the array
+        input_int /= 10;             // Remove the last digit from n
+    }
+}
+
 // Check to see if results are identical
-bool Correctness_Check(long result_karatsuba, long result_fft, long result_iterative_fft) {
+bool Correctness_Check(long long result_karatsuba, long long result_fft,
+                        long long result_iterative_fft) {
     if (result_karatsuba != result_fft || result_fft != result_iterative_fft){
         printf("Results do not match\nresult_dft:\t%ld\nresult_fft:\t%ld\nresult_iterative_fft:\t%ld\n",
                 result_karatsuba, result_fft, result_iterative_fft);
@@ -27,72 +39,67 @@ void Polynomial_Multiply(int n, int iterations) {
 
     // Check if the seed works and we get true random variables
     assert(rand() != rand());
-    int randomValue = 0;
+    long long random_Value_a = 0, random_Value_b = 0;
 
     
 
     // Set up timers
-    double time_fft = 0.0, time_dft = 0.0, time_karatsuba = 0.0,
-            time_iterative_fft = 0.0, time_default = 0.0;
-
-    clock_t start_dft, end_dft, start_fft, end_fft, start_karatsuba,
-            end_karatsuba, start_iterative_fft, end_iterative_fft,
-            start_default, end_default;
+    double time_dft = 0.0, time_fft = 0.0, time_iterative_fft = 0.0, time_karatsuba = 0.0;
+    struct timespec start, end;
+    double elapsed_time;
 
     // Loop through the test multiple times to allow bigger tests
     // Also allows us to test n size vs iterations and their effect
-    long result_fft = 0, result_iterative_fft = 0, result_dft = 0, result_karatsuba = 0;
+    long long result_fft = 0, result_iterative_fft = 0, result_dft = 0, result_karatsuba = 0;
     for (int i = 0; i < iterations; i++) {
+        
+        // Calculate random values
+        random_Value_a = rand() % (long long)pow(10, n/2);
+        random_Value_b = rand() % (long long)pow(10, n/2);
 
-        // Initialize a and b with random single digit values
-        for (int i = 0; i < n/2; i++) {
-            randomValue = rand() % 10;
-            a[i] = randomValue;
-            randomValue = rand() % 10;
-            b[i] = randomValue;
-        }
+        Int_to_Array(random_Value_a, a);
+        Int_to_Array(random_Value_b, b);
 
         // Time DFT
         // THIS CODE HAS BEEN COMMENTED OUT TO COMPUTATIONAL COST IN TESTING
-        start_dft = clock();
-        result_dft = polynomial_multiply_DFT(a, b, n); 
-        end_dft = clock();
-        time_dft += (double)(end_dft - start_dft) / CLOCKS_PER_SEC;
+        // Time Recursive FFT using CLOCK_MONOTONIC for accuracy
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        // result_dft = polynomial_multiply_DFT(a, b, n);
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+        time_dft += elapsed_time;
 
-        // Time FFT
-        start_fft = clock();
+        // Time Recursive FFT using CLOCK_MONOTONIC for accuracy
+        clock_gettime(CLOCK_MONOTONIC, &start);
         result_fft = polynomial_multiply_Recursive_FFT(a, b, n);
-        end_fft = clock();
-        time_fft += (double)(end_fft - start_fft) / CLOCKS_PER_SEC;
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+        time_fft += elapsed_time;
 
-        // Time iterative_FFT
-        start_iterative_fft = clock();
+        // Time Iterative FFT using CLOCK_MONOTONIC for accuracy
+        clock_gettime(CLOCK_MONOTONIC, &start);
         result_iterative_fft = polynomial_multiply_iterative_FFT(a, b, n);
-        end_iterative_fft = clock();
-        time_iterative_fft += (double)(end_iterative_fft - start_iterative_fft) / CLOCKS_PER_SEC;
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+        time_iterative_fft += elapsed_time;
 
-        // time Karasuka
-        start_karatsuba = clock();
+        // Time Karatsuba using CLOCK_MONOTONIC for accuracy
+        clock_gettime(CLOCK_MONOTONIC, &start);
         result_karatsuba = polynomial_multiply_karatsuba(a, b, n);
-        end_karatsuba = clock();
-        time_karatsuba += (double)(end_karatsuba - start_karatsuba) / CLOCKS_PER_SEC;
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+        time_karatsuba += elapsed_time;
 
-        // set a default time to remove the cost of setting the clock from the time
-        start_default = clock();
-        end_default = clock();
-        time_default += (double)(end_default - start_default) / CLOCKS_PER_SEC;
-        // printf("Result:\t%ld\n", result_fft);
-
-        if (n < 30){
+        if (n <= 16){
             // Check if results are the same outside clock, to not affect timer
             Correctness_Check(result_karatsuba, result_fft, result_iterative_fft);
+            // printf("%ld\n", result_fft); //Print results
+        } else{
+            printf("integer overflow!!!\n");
+            exit(1);
         }
 
     }
-    time_dft -= time_default;
-    time_fft -= time_default;
-    time_iterative_fft -= time_default;
-    time_karatsuba -= time_default;
     // Output time
     printf("n size: %dm\t iterations: %d\n", n, iterations);
     printf("DFT multiplication time:\t%f seconds.\n", time_dft);
@@ -114,17 +121,9 @@ void White_Box_Testing() {
 
     //TEST CASE SETUP:
 
-    // // Initialize a and b with inverse number, I.E 27 = a[0] = 7 and a[1] = 2
-    // // Coefficient of x^0 = a[0] and x^1=a[1]
-    a[0] = 7; a[1] = 2; // Polynomial for 27
-    b[0] = 9; b[1] = 3; // Polynomial for 39
-    //What a now says is 7200 and b says 9300 because of n = 4. so we need 4 digits
-    // The reason for this is 
-
-    // // See above for explanation
-    // a[0] = 4; a[1] = 6; a[2] = 5; 
-    // b[0] = 4; b[1] = 3; b[2] = 2;
-
+    // Convert numbers to reverse arrays
+    Int_to_Array(100, a);
+    Int_to_Array(10, b);
 
     // Compute polynomial multiplication using DFT
     long result_dft = polynomial_multiply_DFT(a, b, n); 

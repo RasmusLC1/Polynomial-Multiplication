@@ -1,12 +1,10 @@
 #include "Recursive_fft.h"
 
 
-int total_computations;
 
 // Extended FFT function with allocated_memory parameters
 void Recursive_FFT_ext(complex double *f, int n, complex double *out,
             complex double *allocated_memory, int allocated_memory_size) {
-    total_computations++;
     // Check if n == 1 and return f(1) (f[0])
     if (n == 1) {
         out[0] = f[0];
@@ -26,9 +24,12 @@ void Recursive_FFT_ext(complex double *f, int n, complex double *out,
     // set pointer to the fourth quarter of allocated memory
     complex double *out_odd_values = out_even_values + n_half;
 
+    // Seperate into odd and even numbers
+    int i_double = 0;
     for (int i = 0; i < n_half; i++) {
-        even_values[i] = f[2 * i];
-        odd_values[i] = f[2 * i + 1];
+        i_double = i << 1;
+        even_values[i] = f[i_double];
+        odd_values[i] = f[i_double + 1];
     }
 
     // Double recursive call, half the allocated memory since we are splitting the data
@@ -37,8 +38,10 @@ void Recursive_FFT_ext(complex double *f, int n, complex double *out,
     // Applying the master theorem, here log_2(2) = 1 and C = 1 because f(n) = O(n)
     // Therefore we get the second option and our runtime becomes:
         // T(N) = Θ(n log n)
-    Recursive_FFT_ext(even_values, n_half, out_even_values, out_odd_values + n_half, allocated_memory_size >> 1);
-    Recursive_FFT_ext(odd_values, n_half, out_odd_values, out_odd_values + n_half, allocated_memory_size >> 1);
+    Recursive_FFT_ext(even_values, n_half, out_even_values,
+                        out_odd_values + n_half, allocated_memory_size >> 1);
+    Recursive_FFT_ext(odd_values, n_half, out_odd_values,
+                        out_odd_values + n_half, allocated_memory_size >> 1);
 
     // Compute the FFT output
     complex double tmp = 0;
@@ -54,7 +57,6 @@ void Recursive_FFT_ext(complex double *f, int n, complex double *out,
 // Extended IFFT function with allocated_memory parameters
 void Recursive_IFFT_ext(complex double *f, int n, complex double *out,
                 complex double *allocated_memory, int allocated_memory_size) {
-    // total_computations++;
     if (n == 1) {
         out[0] = f[0];
         return;
@@ -72,15 +74,19 @@ void Recursive_IFFT_ext(complex double *f, int n, complex double *out,
     // set pointer to the fourth quarter of allocated memory
     complex double *out_odd_values = out_even_values + n_half;
 
-    // Divide into even (even_values) and odd (odd_values)
+    // Seperate into odd and even numbers
+    int i_double = 0;
     for (int i = 0; i < n_half; i++) {
-        even_values[i] = f[2 * i];
-        odd_values[i] = f[2 * i + 1];
+        i_double = i << 1;
+        even_values[i] = f[i_double];
+        odd_values[i] = f[i_double + 1];
     }
 
     // Double recursive call, half the allocated memory since we are splitting the data
-    Recursive_IFFT_ext(even_values, n_half, out_even_values, out_odd_values + n_half, allocated_memory_size >> 1);
-    Recursive_IFFT_ext(odd_values, n_half, out_odd_values, out_odd_values + n_half, allocated_memory_size >> 1);
+    Recursive_IFFT_ext(even_values, n_half, out_even_values,
+                        out_odd_values + n_half, allocated_memory_size >> 1);
+    Recursive_IFFT_ext(odd_values, n_half, out_odd_values,
+                        out_odd_values + n_half, allocated_memory_size >> 1);
 
     // Compute the FFT output
     complex double tmp = 0;
@@ -97,10 +103,11 @@ void Recursive_IFFT_ext(complex double *f, int n, complex double *out,
 void Recursive_FFT(complex double *input, int n, complex double *out) {
     // Assign memory outside the recursive loop to save overhead
     // We need 4 arrays, in_even, in_odd, out_even and out_odd. Therefore we need 4 * n
-    complex double *allocated_memory = (complex double *)malloc(4 * n * sizeof(complex double));
+    int n_bitshifted = n << 2; // * 4
+    complex double *allocated_memory = (complex double *)malloc(n_bitshifted * sizeof(complex double));
     
     // Call the actual function
-    Recursive_FFT_ext(input, n, out, allocated_memory, 4 * n);
+    Recursive_FFT_ext(input, n, out, allocated_memory, n >> 2);
     free(allocated_memory);
 }
 
@@ -108,16 +115,21 @@ void Recursive_FFT(complex double *input, int n, complex double *out) {
 // IFFT function to handle allocated_memory allocation and call actual IFFT function
 void Recursive_IFFT(complex double *f, int n, complex double *out) {
     // Assign memory outside the recursive loop to save overhead
-    complex double *allocated_memory = (complex double *)malloc(4 * n * sizeof(complex double));
+    int n_bitshifted = n << 2; // * 4
+    complex double *allocated_memory = (complex double *)malloc(n_bitshifted * sizeof(complex double));
     
     // Call the actual function
-    Recursive_IFFT_ext(f, n, out, allocated_memory, 4 * n);
+    Recursive_IFFT_ext(f, n, out, allocated_memory, n >> 2);
     free(allocated_memory);
+
+    // Normalize the output by dividing by n
+    for (int i = 0; i < n; i++) {
+        out[i] /= n;
+    }
 }
 
 
 long polynomial_multiply_Recursive_FFT(complex double* a, complex double* b, int n) {
-    total_computations = 0;
     
     complex double padded_a[n], padded_b[n], result[n];
     // Pad the inputs with zeros, the polynomials are represented as arays
@@ -146,14 +158,11 @@ long polynomial_multiply_Recursive_FFT(complex double* a, complex double* b, int
     // Apply IFFT to get the product polynomial
     Recursive_IFFT(fa, n, result);
 
-    long fft_total_result = 0;
+    long long fft_total_result = 0;
     // Call IFFT normalisation outside the recursive loop
     for (int i = 0; i < n; i++) {
-        result[i] /= n; // Normalise
-        fft_total_result += (long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
+        fft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
     }
-
-    // printf("FFT Computations:\t%d\n", total_computations);
     
     return fft_total_result;
 }

@@ -10,7 +10,7 @@
 
 
 
-//Source https://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm
+//Source Introduction to Algorithms P. 917
 
 // algorithm iterative-fft is
 //     input: Array a of n complex values where n is a power of 2.
@@ -34,8 +34,8 @@
 
 unsigned int bitReverse(unsigned int x, int log2n);
 
-void Iterative_FFT(complex double* input, int n, int log2n, complex double* output);
+void Iterative_FFT(complex double* input, int n, complex double* output);
 
-void Iterative_IFFT(complex double* input, int n, int log2n, complex double* output);
+void Iterative_IFFT(complex double* input, int n, complex double* output);
 
 long polynomial_multiply_iterative_FFT(complex double* a, complex double* b, int n);

@@ -1,16 +1,13 @@
 #include "dft.h"
 
-int dft_computations = 0;
 
 
 void DFT(complex double *in, int n, complex double *out) {
     // 2 nested for loops is what causes the runtime n^2
     for (int i = 0; i < n; i++) { // For each output element
-
         // initialise each element to 0
         out[i] = 0;
         for (int t = 0; t < n; t++) { // For each input element
-            dft_computations++;
             // Compute DFT function
             out[i] += in[t] * cexp(-I * TAU * t * i / n);
         }
@@ -25,8 +22,8 @@ void IDFT(complex double *in, int n, complex double *out) {
 
         // initialise each element to 0
         out[i] = 0;
+        
         for (int k = 0; k < n; k++) { // For each input element
-            dft_computations++;
             // Compute inverse DFT function by changing the sign
             // This is the only change from DFT
             out[i] += in[k] * cexp(I * TAU * k * i / n);

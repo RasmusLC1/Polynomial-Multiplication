@@ -17,12 +17,14 @@ unsigned int Bit_Reverse(unsigned int x, int log2n) {
     return n;
 }
 
-void Iterative_FFT(complex double* input, int n, int log2n, complex double* output) {
+void Iterative_FFT(complex double* input, int n, complex double* output) {
     int reverse_bit;
     // bit reversal of the given array, this step from pseudocode: bit-reverse-copy(a, A)
     // Example: Index 3: 011 (binary) → Bit-reversed: 110 → Reverse index 6
-    //          so instead of working with index 3, we are now working with index 6
+    // so instead of working with index 3, we are now working with index 6
     // This reorders the array elements and allows them to be merged more efficiently
+    int log2n = log2(n);
+
     for (unsigned int i = 0; i < n; ++i) {
         reverse_bit = Bit_Reverse(i, log2n);
         output[i] = input[reverse_bit];
@@ -59,12 +61,13 @@ void Iterative_FFT(complex double* input, int n, int log2n, complex double* outp
     }
 }
 
-void Iterative_IFFT(complex double* input, int n, int log2n, complex double* output) {
+void Iterative_IFFT(complex double* input, int n, complex double* output) {
     int reverse_bit;
     // bit reversal of the given array, this step from pseudocode: bit-reverse-copy(a, A)
     // Example: Index 3: 011 (binary) → Bit-reversed: 110 → Reverse index 6
     //          so instead of working with index 3, we are now working with index 6
     // This reorders the array elements and allows them to be merged more efficiently
+    int log2n = log2(n);
     for (unsigned int i = 0; i < n; ++i) {
         reverse_bit = Bit_Reverse(i, log2n);
         output[i] = input[reverse_bit];
@@ -124,8 +127,8 @@ long polynomial_multiply_iterative_FFT(complex double* a, complex double* b, int
 
     // outputpply FFT to both padded polynomials
     complex double fa[n], fb[n];
-    Iterative_FFT(padded_a, n, log2(n), fa);
-    Iterative_FFT(padded_b, n, log2(n), fb);
+    Iterative_FFT(padded_a, n, fa);
+    Iterative_FFT(padded_b, n, fb);
 
     // multiply the FFTs
     for (int i = 0; i < n; i++) {
@@ -133,12 +136,12 @@ long polynomial_multiply_iterative_FFT(complex double* a, complex double* b, int
     }
 
     // output IFFT to get the product polynomial
-    Iterative_IFFT(fa, n, log2(n), result);
+    Iterative_IFFT(fa, n, result);
 
-    // Add the results from the IFFT together
-    long fft_total_result = 0;
+    long long fft_total_result = 0;
+    // Call IFFT normalisation outside the recursive loop
     for (int i = 0; i < n; i++) {
-        fft_total_result += (long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
+        fft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
     }
     
     return fft_total_result;
