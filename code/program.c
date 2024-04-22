@@ -2,62 +2,13 @@
 #include "iterative_fft.h"
 #include "dft.h"
 #include "karatsuba.h"
-#include <sys/ioctl.h>
-#include <unistd.h>
+#include "test/WhiteBox_test.h"
+#include "Helper_Functions.h"
+// Getting terminal
 
 
-// // Initialize a and b with inverse number, I.E 27 = a[0] = 7 and a[1] = 2
-    // // Coefficient of x^0 = a[0] and x^1=a[1]
-    // a[0] = 7; a[1] = 2; // Polynomial for 27
-void Int_to_Array(long long input_int, complex double *output_array){
-    int i = 0;
-    while (input_int > 0) {
-        output_array[i++] = input_int % 10; // Store the last digit in the array
-        input_int /= 10;             // Remove the last digit from n
-    }
-}
-
-// Loading screen to help visualise progress
-void Loading_Screen(int iteration, int current_Iteration) {
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);  // Get terminal window size
-    // Check for division with 0
-    if (current_Iteration > 0) {
-        double iteration_percent = (double)current_Iteration / (double)iteration * 100;
-        if (iteration_percent == floor(iteration_percent)) {
-            int window_Left = w.ws_col -iteration_percent + 25; // Get the remaining window size
-
-            // Ensure buffer size does not exceed terminal width
-            int buffer_size = iteration_percent + 1;
-            if (buffer_size > window_Left ) {  
-                buffer_size = window_Left;
-            }
-
-            // Setting up the + buffer for smooth writing
-            char buffer[buffer_size];
-            memset(buffer, '+', buffer_size - 1);
-            buffer[buffer_size - 1] = '\0';
-
-            // Write to terminal and overwrite previous with \r
-            printf("\riteration_percent: %f %%", iteration_percent);  
-            fwrite(buffer, sizeof(char), strlen(buffer), stdout);
-            fflush(stdout);
-        }
-    }
-    return;
-}
 
 
-// Check to see if results are identical
-bool Correctness_Check(long long result_karatsuba, long long result_fft,
-                        long long result_iterative_fft) {
-    if (result_karatsuba != result_fft || result_fft != result_iterative_fft){
-        // printf("Results do not match\nresult_karatsuba:\t%ld\nresult_fft:\t%ld\nresult_iterative_fft:\t%ld\n",
-        //         result_karatsuba, result_fft, result_iterative_fft);
-        return false;
-    }
-    return true; // Arrays are equal
-}
 
 void Polynomial_Multiply(int n, int iterations) {
 
@@ -78,20 +29,16 @@ void Polynomial_Multiply(int n, int iterations) {
     assert(rand() != rand());
     long long random_Value_a = 0, random_Value_b = 0;
 
-    
-
     // Set up timers
     double time_dft = 0.0, time_fft = 0.0, time_iterative_fft = 0.0, time_karatsuba = 0.0;
     struct timespec start, end;
     double elapsed_time;
 
-    
-
 
     // Loop through the test multiple times to allow bigger tests
     // Also allows us to test n size vs iterations and their effect
     long long result_fft = 0, result_iterative_fft = 0, result_dft = 0, result_karatsuba = 0;
-    for (int i = 0; i < iterations; i++) {
+    for (int i = 1; i <= iterations; i++) {
         
         // Calculate random values
         random_Value_a = rand() % (long long)pow(10, n/2);
@@ -132,7 +79,7 @@ void Polynomial_Multiply(int n, int iterations) {
         
         if (n <= 32){
             // Check if results are the same outside clock, to not affect timer
-            if (Correctness_Check(result_karatsuba, result_fft, result_iterative_fft)){
+            if (Correctness_Check(result_fft, result_iterative_fft) && Correctness_Check(result_fft, result_karatsuba)){
                 success++;
             } else{
                 fail++;
@@ -146,7 +93,7 @@ void Polynomial_Multiply(int n, int iterations) {
 
     }
     // Output time
-    printf("\nn size: %dm\t iterations: %d\n", n, iterations);
+    printf("\nn size: %d\t iterations: %d\n", n, iterations);
     printf("Successful calculations:\t%d\nWrong calculations:\t%d\n", success, fail);
     printf("DFT multiplication time:\t%f seconds.\n", time_dft);
     printf("Recursive_FFT multiplication time:\t%f seconds.\n", time_fft);
@@ -193,7 +140,7 @@ void White_Box_Testing() {
 
 int main() {
     int n = 16; // test size needs to be power 2, higher than 16 integer overflow
-    int iterations = 10000000;
+    int iterations = 100000;
     Polynomial_Multiply(n, iterations);
     // White_Box_Testing();
     return 0;

@@ -1,15 +1,6 @@
 #ifndef karatsuba_H
 #define karatsuba_H
-
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <complex.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
-
+#include "Helper_Functions.h"
 
 //PseudoCode from Wiki
 

@@ -1,12 +1,4 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <complex.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
-#include "math.h"
+#include "Helper_Functions.h"
 
 
 
@@ -31,8 +23,6 @@
 //                 ω ← ω ωm
    
 //     return A
-
-unsigned int bitReverse(unsigned int x, int log2n);
 
 void Iterative_FFT(complex double* input, int n, complex double* output);
 

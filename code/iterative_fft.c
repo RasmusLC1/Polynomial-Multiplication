@@ -1,21 +1,6 @@
 #include "iterative_fft.h"
 
-// Utility function for reversing the bits
-// of given index x
-unsigned int Bit_Reverse(unsigned int x, int log2n) {
-    int n = 0;
-    for (int i = 0; i < log2n; i++) {
-        n <<= 1; // Shift n one left (n *= 2)
-        // (x & 1) finds the least signifcation bit of x, if that bit is 1, then it evaluates to 1
-        // else 0.
-        // n |= sets n to 1 if (x & 1) returns 1. 1 = true and 0 = false, in logic
-        // false or true = true, the rest of the outcomes won't affect it:
-        // t | t = t, t | f = t, f | t = t, f | f = f
-        n |= (x & 1); 
-        x >>= 1; // shift x one right (x /= 2)
-    }
-    return n;
-}
+
 
 void Iterative_FFT(complex double* input, int n, complex double* output) {
     int reverse_bit;
@@ -114,7 +99,7 @@ long polynomial_multiply_iterative_FFT(complex double* a, complex double* b, int
     complex double padded_a[n], padded_b[n], result[n];
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
-    // outputrrays help structure the data into parts
+    // outputarrays help structure the data into parts
     memset(padded_a, 0, n * sizeof(complex double));
     memset(padded_b, 0, n * sizeof(complex double));
     memset(result, 0, n * sizeof(complex double));

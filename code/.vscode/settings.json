@@ -3,6 +3,7 @@
         "tuple": "c",
         "utility": "c",
         "cmath": "c",
-        "xlocale": "c"
+        "xlocale": "c",
+        "helper_functions.h": "c"
     }
 }

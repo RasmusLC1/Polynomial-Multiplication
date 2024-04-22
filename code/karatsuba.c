@@ -2,14 +2,6 @@
 
 
 
-int get_half_length(long long value){
-   int count = 0;
-   while (value > 0) {
-      count++;
-      value /= 10;
-   }
-   return count;
-}
 
 long long karatsuba(long long num1, long long num2){
     // Check for base case if either number is single digit, then fastest way

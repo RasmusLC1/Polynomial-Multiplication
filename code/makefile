@@ -4,9 +4,12 @@ PROGRAM=program
 RECURSIVE_FFT = Recursive_fft
 ITERATIVE_FFT = iterative_fft
 DFT = dft
-karatsuba = karatsuba
+KARATSUBA = karatsuba
+WHITEBOX = test/WhiteBox_test
+HELPER_FUNCTIONS = Helper_Functions
 
-OBJS=$(DFT).o $(RECURSIVE_FFT).o $(karatsuba).o $(ITERATIVE_FFT).o
+
+OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o $(HELPER_FUNCTIONS).o
 
 all: $(PROGRAM)
 	@./$(PROGRAM)
@@ -17,14 +20,20 @@ $(PROGRAM): $(PROGRAM).c $(OBJS)
 $(DFT).o: $(DFT).c $(DFT).h
 	$(CC) $(CFLAGS) -c $(DFT).c
 
-$(karatsuba).o: $(karatsuba).c $(karatsuba).h
-	$(CC) $(CFLAGS) -c $(karatsuba).c
+$(KARATSUBA).o: $(KARATSUBA).c $(KARATSUBA).h
+	$(CC) $(CFLAGS) -c $(KARATSUBA).c
 
 $(RECURSIVE_FFT).o: $(RECURSIVE_FFT).c $(RECURSIVE_FFT).h
 	$(CC) $(CFLAGS) -c $(RECURSIVE_FFT).c
 
 $(ITERATIVE_FFT).o: $(ITERATIVE_FFT).c $(ITERATIVE_FFT).h
 	$(CC) $(CFLAGS) -c $(ITERATIVE_FFT).c
+
+$(WHITEBOX).o: $(WHITEBOX).c $(WHITEBOX).h
+	$(CC) $(CFLAGS) -c $(WHITEBOX).c
+
+$(HELPER_FUNCTIONS).o: $(HELPER_FUNCTIONS).c $(HELPER_FUNCTIONS).h
+	$(CC) $(CFLAGS) -c $(HELPER_FUNCTIONS).c
 
 clean:
 	rm -f $(PROGRAM) $(OBJS)
