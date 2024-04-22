@@ -18,6 +18,6 @@ void DFT(complex double *in, int n, complex double *out);
 
 void IDFT(complex double *in, int n, complex double *out);
 
-long polynomial_multiply_DFT(complex double *a, complex double *b, int n);
+long long polynomial_multiply_DFT(complex double *a, complex double *b, int n);
 
 #endif

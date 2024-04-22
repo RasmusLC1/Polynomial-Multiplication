@@ -33,7 +33,7 @@ void IDFT(complex double *in, int n, complex double *out) {
 }
 
 
-long polynomial_multiply_DFT(complex double *a, complex double *b, int n) {
+long long polynomial_multiply_DFT(complex double *a, complex double *b, int n) {
     
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
@@ -63,10 +63,10 @@ long polynomial_multiply_DFT(complex double *a, complex double *b, int n) {
     IDFT(fa, n, result);
 
     //Convert to the real number
-    long dft_total_result = 0;
+    long long dft_total_result = 0;
     for (int i = 0; i < n; i++) {
         // Get the actual result of the fft
-        dft_total_result += (int)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
+        dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
         // printf("FFT sum:\t%d\n", fft_current_result); // print the increment steps
     }
     return dft_total_result;

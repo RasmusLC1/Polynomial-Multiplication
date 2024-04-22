@@ -1,6 +1,8 @@
 #include "karatsuba.h"
 
-int get_half_length(long value){
+
+
+int get_half_length(long long value){
    int count = 0;
    while (value > 0) {
       count++;
@@ -9,10 +11,10 @@ int get_half_length(long value){
    return count;
 }
 
-long karatsuba(long num1, long num2){
+long long karatsuba(long long num1, long long num2){
     // Check for base case if either number is single digit, then fastest way
     // is to multiply like normal
-    if (num1 < 10 && num2 < 10){
+    if (num1 < 10 || num2 < 10){
         return num1 * num2;    
     }
 
@@ -24,7 +26,7 @@ long karatsuba(long num1, long num2){
     // >>1 = /2
     half_length = (half_length >> 1) + (half_length % 2);
 
-    long split_factor = pow(10, half_length);
+    long long split_factor = pow(10, half_length);
 
     long long high1 = num1 / split_factor;
     long long high2 = num2 / split_factor;
@@ -48,14 +50,14 @@ long karatsuba(long num1, long num2){
 
 
 
-long polynomial_multiply_karatsuba(complex double *a, complex double *b, int n){
+long long polynomial_multiply_karatsuba(complex double *a, complex double *b, int n){
     //Convert array to integer
-    int num1 = 0, num2 = 0;
+    long long num1 = 0, num2 = 0;
     for (int i = 0; i < n; i++) {
         num1 += a[i] * pow(10, i);
         num2 += b[i] * pow(10, i);
     }
-    long result = karatsuba(num1, num2);
+    long long result = karatsuba(num1, num2);
 
 
     // printf("karatsuba Computations:\t%d\n", total_computations);
