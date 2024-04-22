@@ -1,15 +1,7 @@
 #ifndef FFT_H
 #define FFT_H
+#include "Helper_Functions.h"
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <complex.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
-#include "math.h"
 
 // Base case
 //1  if n = 1 then

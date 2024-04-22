@@ -4,6 +4,7 @@
         "utility": "c",
         "cmath": "c",
         "xlocale": "c",
-        "helper_functions.h": "c"
+        "helper_functions.h": "c",
+        "whitebox_test.h": "c"
     }
 }
