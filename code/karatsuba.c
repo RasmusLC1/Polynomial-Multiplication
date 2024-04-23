@@ -42,17 +42,37 @@ long long karatsuba(long long num1, long long num2){
 
 
 
-long long polynomial_multiply_karatsuba(complex double *a, complex double *b, int n){
-    //Convert array to integer
-    long long num1 = 0, num2 = 0;
-    for (int i = 0; i < n; i++) {
-        num1 += a[i] * pow(10, i);
-        num2 += b[i] * pow(10, i);
+long long polynomial_multiply_karatsuba(long a, long b, int n){
+    
+    bool negative = false;
+
+    if (a < 0 && b >= 0){
+        negative = true;
+        a *= -1;
+    } else if (b < 0 && a >= 0){
+        negative = true;
+        b *= -1;
     }
-    long long result = karatsuba(num1, num2);
+    
+    long long karatsuba_total_result = karatsuba(a, b);
 
+    if (negative){
+        karatsuba_total_result *= -1;
+    }
 
-    // printf("karatsuba Computations:\t%d\n", total_computations);
-    return result;
+    // Adding empty array data handling to balance out the equations, since
+    // The FFT algorithms have to do these for setup 
+
+    complex double padded_a[n], padded_b[n], result[n];
+    memset(padded_a, 0, n * sizeof(complex double));
+    memset(padded_b, 0, n * sizeof(complex double));
+    memset(result, 0, n * sizeof(complex double));
+    
+    Int_to_Array(a, padded_a);
+    Int_to_Array(b, padded_b);
+    // End of Filler
+    
+
+    return karatsuba_total_result;
 }
 

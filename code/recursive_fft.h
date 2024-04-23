@@ -25,7 +25,7 @@ void Recursive_FFT(complex double *f, int n, complex double *out);
 
 void Recursive_IFFT(complex double *f, int n, complex double *out);
 
-long polynomial_multiply_Recursive_FFT(complex double* a, complex double* b, int n);
+long polynomial_multiply_Recursive_FFT(long a, long b, int n);
 
 
 #endif

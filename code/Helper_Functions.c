@@ -16,7 +16,7 @@ void Loading_Screen(int iteration, int current_Iteration) {
     if (current_Iteration > 0) {
         double iteration_percent = (double)current_Iteration / (double)iteration * 100;
         if (iteration_percent == floor(iteration_percent)) {
-            int window_Left = w.ws_col -iteration_percent + 25; // Get the remaining window size
+            int window_Left = w.ws_col -iteration_percent + 30; // Get the remaining window size
 
             // Ensure buffer size does not exceed terminal width
             int buffer_size = iteration_percent + 1;
@@ -30,7 +30,7 @@ void Loading_Screen(int iteration, int current_Iteration) {
             buffer[buffer_size - 1] = '\0';
 
             // Write to terminal and overwrite previous with \r
-            printf("\riteration_percent: %f %%", iteration_percent);  
+            printf("\rIterations completed: %f%%: ", iteration_percent);  
             fwrite(buffer, sizeof(char), strlen(buffer), stdout);
             fflush(stdout);
         }

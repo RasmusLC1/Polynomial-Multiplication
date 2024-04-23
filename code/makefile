@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS=-Wall -pedantic -std=gnu11 -O2
+LDFLAGS=-lm -lmpfr -lgmp -lcheck -lrt -lpthread -lsubunit # Add libraries here
 PROGRAM=program
-RECURSIVE_FFT = Recursive_fft
-ITERATIVE_FFT = iterative_fft
-DFT = dft
-KARATSUBA = karatsuba
-WHITEBOX = test/WhiteBox_test
-HELPER_FUNCTIONS = Helper_Functions
-
+RECURSIVE_FFT=Recursive_fft
+ITERATIVE_FFT=iterative_fft
+DFT=dft
+KARATSUBA=karatsuba
+WHITEBOX=test/WhiteBox_test
+HELPER_FUNCTIONS=Helper_Functions
 
 OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o $(HELPER_FUNCTIONS).o
 
@@ -15,7 +15,7 @@ all: $(PROGRAM)
 	@./$(PROGRAM)
 
 $(PROGRAM): $(PROGRAM).c $(OBJS)
-	$(CC) $(CFLAGS) $(PROGRAM).c $(OBJS) -o $(PROGRAM) -lm -lmpfr -lgmp
+	$(CC) $(CFLAGS) $(PROGRAM).c $(OBJS) -o $(PROGRAM) $(LDFLAGS)
 
 $(DFT).o: $(DFT).c $(DFT).h
 	$(CC) $(CFLAGS) -c $(DFT).c

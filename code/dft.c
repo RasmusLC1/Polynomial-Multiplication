@@ -33,7 +33,17 @@ void IDFT(complex double *in, int n, complex double *out) {
 }
 
 
-long long polynomial_multiply_DFT(complex double *a, complex double *b, int n) {
+long long polynomial_multiply_DFT(long a, long b, int n) {
+    
+    bool negative = false;
+
+    if (a < 0 && b >= 0){
+        negative = true;
+        a *= -1;
+    } else if (b < 0 && a >= 0){
+        negative = true;
+        b *= -1;
+    }
     
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
@@ -43,11 +53,8 @@ long long polynomial_multiply_DFT(complex double *a, complex double *b, int n) {
     memset(padded_b, 0, n * sizeof(complex double));
     memset(result, 0, n * sizeof(complex double));
     
-    // Write the initial polynomials onto the padded polynomials
-    for (int i = 0; i < n; i++) {
-        padded_a[i] = a[i];
-        padded_b[i] = b[i];
-    }
+    Int_to_Array(a, padded_a);
+    Int_to_Array(b, padded_b);
 
     // Apply DFT to both polynomials
     complex double fa[n], fb[n];
@@ -68,6 +75,9 @@ long long polynomial_multiply_DFT(complex double *a, complex double *b, int n) {
         // Get the actual result of the fft
         dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
         // printf("FFT sum:\t%d\n", fft_current_result); // print the increment steps
+    }
+    if (negative){
+        dft_total_result *= -1;
     }
     return dft_total_result;
 

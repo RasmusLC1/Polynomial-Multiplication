@@ -12,7 +12,7 @@ void Recursive_FFT_ext(complex double *f, int n, complex double *out,
     }
 
     // Save n/2 in a variable to save computations
-    int n_half = n >> 1; // /2
+    int n_half = n >> 1;
 
     // Use the passed allocated_memory instead of allocating memory
     // set pointer to start of allocated_memory
@@ -129,21 +129,27 @@ void Recursive_IFFT(complex double *f, int n, complex double *out) {
 }
 
 
-long polynomial_multiply_Recursive_FFT(complex double* a, complex double* b, int n) {
+long polynomial_multiply_Recursive_FFT(long a, long b, int n) {
+    bool negative = false;
+
+    if (a < 0 && b >= 0){
+        negative = true;
+        a *= -1;
+    } else if (b < 0 && a >= 0){
+        negative = true;
+        b *= -1;
+    }
     
-    complex double padded_a[n], padded_b[n], result[n];
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
     // Arrays help structure the data into parts
+    complex double padded_a[n], padded_b[n], result[n];
     memset(padded_a, 0, n * sizeof(complex double));
     memset(padded_b, 0, n * sizeof(complex double));
     memset(result, 0, n * sizeof(complex double));
-
-    // Write the initial polynomials onto the padded polynomials
-    for (int i = 0; i < n; i++) {
-        padded_a[i] = a[i];
-        padded_b[i] = b[i];
-    }
+    
+    Int_to_Array(a, padded_a);
+    Int_to_Array(b, padded_b);
 
     // Apply FFT to both padded polynomials
     complex double fa[n], fb[n];
@@ -162,6 +168,10 @@ long polynomial_multiply_Recursive_FFT(complex double* a, complex double* b, int
     // Call IFFT normalisation outside the recursive loop
     for (int i = 0; i < n; i++) {
         fft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
+    }
+
+    if (negative){
+        fft_total_result *= -1;
     }
     
     return fft_total_result;

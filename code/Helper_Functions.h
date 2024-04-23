@@ -8,9 +8,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
-#include "math.h"
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include "math.h"
 
 // // Initialize a and b with inverse number, I.E 27 = a[0] = 7 and a[1] = 2
     // // Coefficient of x^0 = a[0] and x^1=a[1]

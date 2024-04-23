@@ -28,6 +28,6 @@ long long karatsuba(long long num1, long long num2);
 
 int get_half_length(long long value);
 
-long long polynomial_multiply_karatsuba(complex double *a, complex double *b, int n);
+long long polynomial_multiply_karatsuba(long a, long b, int n);
 
 #endif
