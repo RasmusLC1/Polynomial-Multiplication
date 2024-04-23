@@ -24,9 +24,10 @@
     
 //     return (z2 × 10 ^ (m2 × 2)) + ((z1 - z2 - z0) × 10 ^ m2) + z0
 
-void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result);
+long long karatsuba(long long num1, long long num2);
 
+int get_half_length(long long value);
 
-void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, mpz_t karatsuba_result);
+long long polynomial_multiply_karatsuba(long a, long b, int n);
 
 #endif

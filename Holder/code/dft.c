@@ -33,60 +33,52 @@ void IDFT(complex double *in, int n, complex double *out) {
 }
 
 
-void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
+long long polynomial_multiply_DFT(long a, long b, int n) {
     
-   
+    bool negative = false;
+
+    if (a < 0 && b >= 0){
+        negative = true;
+        a *= -1;
+    } else if (b < 0 && a >= 0){
+        negative = true;
+        b *= -1;
+    }
     
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
     // Arrays help structure the data into parts
-    complex double padded_a[n], padded_b[n], dft_result[n];
+    complex double padded_a[n], padded_b[n], result[n];
     memset(padded_a, 0, n * sizeof(complex double));
     memset(padded_b, 0, n * sizeof(complex double));
-    memset(dft_result, 0, n * sizeof(complex double));
+    memset(result, 0, n * sizeof(complex double));
+    
+    Int_to_Array(a, padded_a);
+    Int_to_Array(b, padded_b);
 
-    mpz_to_array(a, padded_a);
-    mpz_to_array(b, padded_b);
-
-    // // Apply DFT to both polynomials
+    // Apply DFT to both polynomials
     complex double fa[n], fb[n];
     DFT(padded_a, n, fa);
     DFT(padded_b, n, fb);
 
-    // // Point-wise multiply the DFTs
+    // Point-wise multiply the DFTs
     for (int i = 0; i < n; i++) {
         fa[i] *= fb[i];
     }
 
-    // // Apply IDFT to get the product polynomial
-    IDFT(fa, n, dft_result);
+    // Apply IDFT to get the product polynomial
+    IDFT(fa, n, result);
 
-    // //Convert to the real number
-    mpz_t temp, result, power;
-    
-    // dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
+    //Convert to the real number
+    long long dft_total_result = 0;
     for (int i = 0; i < n; i++) {
-        mpz_init(temp);
-        mpz_init(result);
-        mpz_init(power);
-        // Calculate 10^i using GMP
-        mpz_ui_pow_ui(power, 10, i);
-
-        // Convert creal(result[i]) to nearest integer and multiply by 10^i
-        mpz_set_d(temp, floor(creal(dft_result[i]) + 0.5));
-        mpz_mul(result, temp, power);
-
-        // Add to the total result
-        mpz_add(dft_total_result, dft_total_result, result);
-        // Cleanup
-        mpz_clear(temp);
-        mpz_clear(result);
-        mpz_clear(power);    
+        // Get the actual result of the fft
+        dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
+        // printf("FFT sum:\t%d\n", fft_current_result); // print the increment steps
     }
-
-        // dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
-
-    
-    return;
+    if (negative){
+        dft_total_result *= -1;
+    }
+    return dft_total_result;
 
 }

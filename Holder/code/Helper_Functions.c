@@ -1,19 +1,11 @@
 #include "Helper_Functions.h"
 
-void mpz_to_array(mpz_t input_int, complex double *output_array) {
-    // Convert mpz_t to a string
-    char *int_str = mpz_get_str(NULL, 10, input_int); // Base 10 representation
-    int len = strlen(int_str);
-
-    // Store digits in reverse order
-    for (int i = 0; i < len; i++) {
-        // Convert character to integer (digit)
-        int digit = int_str[len - 1 - i] - '0'; // Reverse the index to store in reverse order
-        output_array[i] = digit + 0.0 * I; // Store as complex double, imaginary part is 0
+void Int_to_Array(long long input_int, complex double *output_array){
+    int i = 0;
+    while (input_int > 0) {
+        output_array[i++] = input_int % 10; // Store the last digit in the array
+        input_int /= 10;             // Remove the last digit from n
     }
-
-    // Free the allocated string
-    free(int_str);
 }
 
 
@@ -48,8 +40,8 @@ void Loading_Screen(int iteration, int current_Iteration) {
 
 
 // Check to see if results are identical
-bool Correctness_Check(mpz_t result1, mpz_t result2) {
-    if (mpz_cmp(result1, result2)){
+bool Correctness_Check(long long result1, long long result2) {
+    if (result1 != result2){
         return false;
     }
     return true; 
@@ -72,9 +64,11 @@ unsigned int Bit_Reverse(unsigned int x, int log2n) {
     return n;
 }
 
-int get_half_length(mpz_t num) {
-    char num_str[mpz_sizeinbase(num, 10) + 2];
-
-    mpz_get_str(num_str, 10, num);
-    return strlen(num_str) / 2;
+int get_half_length(long long value){
+   int count = 0;
+   while (value > 0) {
+      count++;
+      value /= 10;
+   }
+   return count;
 }

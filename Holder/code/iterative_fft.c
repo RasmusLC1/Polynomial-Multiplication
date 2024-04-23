@@ -94,53 +94,50 @@ void Iterative_IFFT(complex double* input, int n, complex double* output) {
 
 
 
-void polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n, mpz_t* iterative_fft_total_result) {
+long polynomial_multiply_iterative_FFT(long a, long b, int n) {
+    
+    bool negative = false;
+
+    if (a < 0 && b >= 0){
+        negative = true;
+        a *= -1;
+    } else if (b < 0 && a >= 0){
+        negative = true;
+        b *= -1;
+    }
+    
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
     // Arrays help structure the data into parts
-    complex double padded_a[n], padded_b[n], fft_result[n];
+    complex double padded_a[n], padded_b[n], result[n];
     memset(padded_a, 0, n * sizeof(complex double));
     memset(padded_b, 0, n * sizeof(complex double));
-    memset(fft_result, 0, n * sizeof(complex double));
-
-    mpz_to_array(a, padded_a);
-    mpz_to_array(b, padded_b);
-
-    // // Apply FFT to both polynomials
+    memset(result, 0, n * sizeof(complex double));
+    
+    Int_to_Array(a, padded_a);
+    Int_to_Array(b, padded_b);
+    // outputpply FFT to both padded polynomials
     complex double fa[n], fb[n];
     Iterative_FFT(padded_a, n, fa);
     Iterative_FFT(padded_b, n, fb);
 
-    // // Point-wise multiply the FFTs
+    // multiply the FFTs
     for (int i = 0; i < n; i++) {
         fa[i] *= fb[i];
     }
 
-    // // Apply IFFT to get the product polynomial
-    Iterative_IFFT(fa, n, fft_result);
+    // output IFFT to get the product polynomial
+    Iterative_IFFT(fa, n, result);
 
-    // //Convert to the real number
-    mpz_t temp, result, power;
-    
-    // FFT_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
+    long long fft_total_result = 0;
+    // Call IFFT normalisation outside the recursive loop
     for (int i = 0; i < n; i++) {
-        mpz_init(temp);
-        mpz_init(result);
-        mpz_init(power);
-        // Calculate 10^i using GMP
-        mpz_ui_pow_ui(power, 10, i);
-
-        // Convert creal(result[i]) to nearest integer and multiply by 10^i
-        mpz_set_d(temp, floor(creal(fft_result[i]) + 0.5));
-        mpz_mul(result, temp, power);
-
-        // Add to the total result
-        mpz_add(iterative_fft_total_result, iterative_fft_total_result, result);
-        // Cleanup
-        mpz_clear(temp);
-        mpz_clear(result);
-        mpz_clear(power);    
+        fft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i); // adding 0.5 to always round up
     }
 
-    return;
+    if (negative){
+        fft_total_result *= -1;
+    }
+    
+    return fft_total_result;
 }
