@@ -12,8 +12,7 @@ void Polynomial_Multiply() {
     int fail = 0, success = 0;
 
     mpz_t random_Value_a, random_Value_b;
-    mpz_init(random_Value_a);
-    mpz_init(random_Value_b);
+    mpz_inits(random_Value_a, random_Value_b, NULL);
 
     // Seed the random state with current time
     gmp_randstate_t state;
@@ -82,8 +81,7 @@ void Polynomial_Multiply() {
         
 
     }
-    mpz_clear(random_Value_a);
-    mpz_clear(random_Value_b);
+    mpz_clears(random_Value_a, random_Value_b, NULL);
 
     printf("\nn size: %d\t iterations: %d\n", n, iterations);
     printf("Successful calculations:\t%d\nWrong calculations:\t%d\n", success, fail);
