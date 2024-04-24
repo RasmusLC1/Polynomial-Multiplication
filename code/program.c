@@ -6,8 +6,8 @@
 #include "Helper_Functions.h"
 
 void Polynomial_Multiply() {
-    int n = 256 ; // test size needs to be power 2
-    int iterations = 10;
+    int n = 512 ; // test size needs to be power 2
+    int iterations = 100;
     // Set up correctness meassure
     int fail = 0, success = 0;
 
@@ -31,10 +31,10 @@ void Polynomial_Multiply() {
     mpz_t result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba;
     
     for (int i = 1; i <= iterations; i++) {
-        mpz_init(result_recursive_fft);
-        mpz_init(result_iterative_fft);
-        mpz_init(result_dft);
-        mpz_init(result_karatsuba);
+
+
+        mpz_inits(result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
+
         // Generate a random number with n bits
         mpz_urandomb(random_Value_a, state, n);
         mpz_urandomb(random_Value_b, state, n);
@@ -77,12 +77,9 @@ void Polynomial_Multiply() {
             fail ++;
         }
         // Clear the space allocated for the number and the random state
-        mpz_clear(result_recursive_fft);
-        mpz_clear(result_iterative_fft);
-        mpz_clear(result_dft);
-        mpz_clear(result_karatsuba);
-        
+        mpz_clears(result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
         Loading_Screen(iterations, i);
+        
 
     }
     mpz_clear(random_Value_a);

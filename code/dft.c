@@ -66,9 +66,8 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
     
     // dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
     for (int i = 0; i < n; i++) {
-        mpz_init(temp);
-        mpz_init(result);
-        mpz_init(power);
+        mpz_inits(temp, result, power, NULL);
+
         // Calculate 10^i using GMP
         mpz_ui_pow_ui(power, 10, i);
 
@@ -79,9 +78,8 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
         // Add to the total result
         mpz_add(dft_total_result, dft_total_result, result);
         // Cleanup
-        mpz_clear(temp);
-        mpz_clear(result);
-        mpz_clear(power);    
+        mpz_clears(temp, result, power, NULL);
+  
     }
 
         // dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
