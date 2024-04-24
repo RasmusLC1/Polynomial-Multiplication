@@ -5,6 +5,8 @@
         "xutility": "c",
         "cmath": "c",
         "time.h": "c",
-        "complex": "c"
+        "complex": "c",
+        "iterator": "c",
+        "memory": "c"
     }
 }

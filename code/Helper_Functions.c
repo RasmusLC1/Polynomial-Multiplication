@@ -73,8 +73,7 @@ unsigned int Bit_Reverse(unsigned int x, int log2n) {
 }
 
 int get_half_length(mpz_t num) {
-    char num_str[mpz_sizeinbase(num, 10) + 2];
-
-    mpz_get_str(num_str, 10, num);
-    return strlen(num_str) / 2;
+    char num_str[mpz_sizeinbase(num, 10) + 2];  // Ensure enough space for '\0'
+    mpz_get_str(num_str, 10, num);  // Convert number to string base 10
+    return strlen(num_str) / 2;  // Half the length of the number in digits
 }

@@ -6,8 +6,8 @@
 #include "Helper_Functions.h"
 
 void Polynomial_Multiply() {
-    int n = 4 ; // test size needs to be power 2
-    int iterations = 100;
+    int n = 256 ; // test size needs to be power 2
+    int iterations = 10;
     // Set up correctness meassure
     int fail = 0, success = 0;
 
@@ -75,9 +75,6 @@ void Polynomial_Multiply() {
                 success++;
         }else{
             fail ++;
-            gmp_printf("a is: %Zd\n", random_Value_a);
-            gmp_printf("b is: %Zd\n", random_Value_b);
-            gmp_printf("result is: %Zd\n", result_karatsuba);
         }
         // Clear the space allocated for the number and the random state
         mpz_clear(result_recursive_fft);
@@ -85,7 +82,7 @@ void Polynomial_Multiply() {
         mpz_clear(result_dft);
         mpz_clear(result_karatsuba);
         
-        // Loading_Screen(iterations, i);
+        Loading_Screen(iterations, i);
 
     }
     mpz_clear(random_Value_a);
