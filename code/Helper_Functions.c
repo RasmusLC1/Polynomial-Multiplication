@@ -1,6 +1,6 @@
 #include "Helper_Functions.h"
 
-void mpz_to_array(mpz_t input_int, complex double *output_array) {
+void mpz_to_complex_array(mpz_t input_int, complex double *output_array) {
     // Convert mpz_t to a string
     char *int_str = mpz_get_str(NULL, 10, input_int); // Base 10 representation
     int len = strlen(int_str);
@@ -15,6 +15,33 @@ void mpz_to_array(mpz_t input_int, complex double *output_array) {
     // Free the allocated string
     free(int_str);
 }
+
+int mpz_to_int_array(mpz_t input_int, int *output_array) {
+    // Convert mpz_t to a string
+    char *int_str = mpz_get_str(NULL, 10, input_int); // Base 10 representation
+    int len = strlen(int_str);
+    int i = 0;
+    // Store digits in reverse order
+    for (i; i < len; i++) {
+        // Convert character to integer (digit)
+        int digit = int_str[len - 1 - i] - '0'; // Reverse the index to store in reverse order
+        output_array[i] = digit; // Store as complex double, imaginary part is 0
+    }
+
+    // Free the allocated string
+    free(int_str);
+    return i;
+}
+
+
+void Int_to_Array(long long input_int, complex double *output_array){
+    int i = 0;
+    while (input_int > 0) {
+        output_array[i++] = input_int % 10; // Store the last digit in the array
+        input_int /= 10;             // Remove the last digit from n
+    }
+}
+
 
 
 void Loading_Screen(int iteration, int current_Iteration) {

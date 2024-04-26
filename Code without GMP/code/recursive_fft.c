@@ -99,7 +99,7 @@ void Recursive_IFFT_ext(complex double *f, int n, complex double *out,
     }
 }
 
-// Wrapper function for FFT to handle allocated_memory allocation
+// FFT function to allocate memory and call actual FFT functionn
 void Recursive_FFT(complex double *input, int n, complex double *out) {
     // Assign memory outside the recursive loop to save overhead
     // We need 4 arrays, in_even, in_odd, out_even and out_odd. Therefore we need 4 * n
@@ -112,7 +112,7 @@ void Recursive_FFT(complex double *input, int n, complex double *out) {
 }
 
 
-// IFFT function to handle allocated_memory allocation and call actual IFFT function
+// IFFT function to allocate memory and call actual IFFT function
 void Recursive_IFFT(complex double *f, int n, complex double *out) {
     // Assign memory outside the recursive loop to save overhead
     int n_bitshifted = n << 2; // * 4

@@ -6,8 +6,8 @@
 #include "Helper_Functions.h"
 
 void Polynomial_Multiply() {
-    int n = 512 ; // test size needs to be power 2
-    int iterations = 100;
+    int n = 16 ; // test size needs to be power 2
+    int iterations = 10;
     // Set up correctness meassure
     int fail = 0, success = 0;
 
@@ -40,28 +40,28 @@ void Polynomial_Multiply() {
 
         // DFT TEST
         clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_DFT(random_Value_a, random_Value_b, n, result_dft);
+        polynomial_multiply_DFT(random_Value_a, random_Value_b, n, &result_dft);
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_dft += elapsed_time - time_default;
         
         // Recursive FFT test
         clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_Recursive_FFT(random_Value_a, random_Value_b, n, result_recursive_fft);
+        polynomial_multiply_Recursive_FFT(random_Value_a, random_Value_b, n, &result_recursive_fft);
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_fft += elapsed_time - time_default;
 
         // Iterative FFT test
         clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_iterative_FFT(random_Value_a, random_Value_b, n, result_iterative_fft);
+        polynomial_multiply_iterative_FFT(random_Value_a, random_Value_b, n, &result_iterative_fft);
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_iterative_fft += elapsed_time - time_default;
 
         // Karatsuba test
         clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_karatsuba(random_Value_a, random_Value_b, result_karatsuba);
+        polynomial_multiply_karatsuba(random_Value_a, random_Value_b, n, result_karatsuba);
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_karatsuba += elapsed_time - time_default;
@@ -77,7 +77,7 @@ void Polynomial_Multiply() {
         }
         // Clear the space allocated for the number and the random state
         mpz_clears(result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
-        Loading_Screen(iterations, i);
+        // Loading_Screen(iterations, i);
         
 
     }

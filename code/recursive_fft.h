@@ -17,13 +17,13 @@
 //9      Store the value f (ωi) = β + γωi.
 //10      return  f (1), . . . , f (ωn−1).
 
-void Recursive_FFT_ext(complex double *f, int n, complex double *out, complex double *allocated_memory, int allocated_memory_size);
+void Recursive_FFT_ext(complex double *input, int n, complex double *out, complex double *allocated_memory, int allocated_memory_size);
 
-void Recursive_IFFT_ext(complex double *f, int n, complex double *out, complex double *allocated_memory, int allocated_memory_size);
+void Recursive_IFFT_ext(complex double *input, int n, complex double *out, complex double *allocated_memory, int allocated_memory_size);
 
-void Recursive_FFT(complex double *f, int n, complex double *out);
+void Recursive_FFT(complex double *input, int n, complex double *out);
 
-void Recursive_IFFT(complex double *f, int n, complex double *out);
+void Recursive_IFFT(complex double *input, int n, complex double *out);
 
 void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result);
 

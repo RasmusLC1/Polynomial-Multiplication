@@ -45,8 +45,8 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
     memset(padded_b, 0, n * sizeof(complex double));
     memset(dft_result, 0, n * sizeof(complex double));
 
-    mpz_to_array(a, padded_a);
-    mpz_to_array(b, padded_b);
+    mpz_to_complex_array(a, padded_a);
+    mpz_to_complex_array(b, padded_b);
 
     // // Apply DFT to both polynomials
     complex double fa[n], fb[n];

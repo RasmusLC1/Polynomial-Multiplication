@@ -1,6 +1,6 @@
 #include "Helper_Functions.h"
 
-void Int_to_Array(long long input_int, complex double *output_array){
+int Int_to_Array(long long input_int, complex double *output_array){
     int i = 0;
     while (input_int > 0) {
         output_array[i++] = input_int % 10; // Store the last digit in the array

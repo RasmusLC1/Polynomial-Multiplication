@@ -39,7 +39,7 @@ void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result) {
     karatsuba(low1, low2, product_low);  
     karatsuba(high1, high2, product_high);
 
-    // Final recursive call long long product_high = karatsuba(high1, high2);
+    // Final recursive call int product_high = karatsuba(high1, high2);
     mpz_add(temp, low1, high1);
  
     mpz_add(temp2, low2, high2);
@@ -59,13 +59,96 @@ void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result) {
     mpz_clears(high1, high2, low1, low2, product_low, product_middle, product_high, temp, temp2, split_factor, NULL);
 }
 
-
-
-
-void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, mpz_t karatsuba_result){
-       
-    karatsuba(a, b, karatsuba_result);
-
-    return;
+void add(int *a, int *b, int n) {
+    for (int i = 0; i < n; i++) {
+        a[i] += b[i];
+    }
 }
 
+void subtract(int *a, int *b, int n) {
+    for (int i = 0; i < n; i++) {
+        a[i] -= b[i];
+    }
+}
+
+void Karatsuba_Recursive(int *input1, int *input2, int degree, int *result, int *temp_storage) {
+    if (degree <= 8) {
+        // Use naive multiplication for small degree
+        for (int i = 0; i < degree; i++) {
+            for (int j = 0; j < degree; j++) {
+                result[i + j] += input1[i] * input2[j];
+            }
+        }
+        return;
+    }
+
+    int mid = degree / 2;
+
+    int *low1 = input1;
+    int *high1 = input1 + mid;
+    int *low2 = input2;
+    int *high2 = input2 + mid;
+
+    int *z0 = temp_storage;
+    int *z1 = temp_storage + degree;
+    int *z2 = temp_storage + 2 * degree;
+    int *tmp = temp_storage + 3 * degree;
+
+    Karatsuba_Recursive(low1, low2, mid, z0, temp_storage);
+    Karatsuba_Recursive(high1, high2, degree - mid, z2, temp_storage);
+
+    add(low1, high1, mid);
+    add(low2, high2, mid);
+    Karatsuba_Recursive(low1, low2, mid, z1, tmp);
+    subtract(z1, z0, degree);
+    subtract(z1, z2, degree);
+
+    memcpy(result, z0, 2 * degree * sizeof(int));
+    add(result + mid, z1, degree);
+    add(result + degree, z2, degree);
+}
+
+void Karatsuba_Multiply(int *input1, int *input2, int degree, int *result) {
+    int new_degree = 1;
+    while (new_degree < degree) {
+        new_degree <<= 1; // Find the next power of 2 greater than degree
+    }
+
+    int *allocated_memory = (int *)malloc(12 * new_degree * sizeof(int));
+    memset(result, 0, 2 * new_degree * sizeof(int));
+
+    Karatsuba_Recursive(input1, input2, new_degree, result, allocated_memory);
+
+    free(allocated_memory);
+}
+
+void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t karatsuba_total_result) {
+    int *padded_a = calloc(n, sizeof(int));
+    int *padded_b = calloc(n, sizeof(int));
+    int *karatsuba_result = calloc(2 * n, sizeof(int));
+
+    mpz_to_int_array(a, padded_a); // Assume correct implementation
+    mpz_to_int_array(b, padded_b);
+
+    Karatsuba_Multiply(padded_a, padded_b, n, karatsuba_result);
+
+    mpz_set_ui(karatsuba_total_result, 0); // Initialize result
+    mpz_t temp, power;
+    mpz_inits(temp, power, NULL);
+
+    for (int i = 0; i < 2 * n; i++) {
+        if (karatsuba_result[i] != 0) {
+            mpz_ui_pow_ui(power, 10, i);
+            mpz_set_si(temp, karatsuba_result[i]);
+            mpz_mul(temp, temp, power);
+            mpz_add(karatsuba_total_result, karatsuba_total_result, temp);
+        }
+    }
+
+    mpz_clears(temp, power, NULL);
+    free(padded_a);
+    free(padded_b);
+    free(karatsuba_result);
+
+    gmp_printf("a: %Zd\nb: %Zd\nkaratsuba_total_result: %Zd\n", a, b, karatsuba_total_result);
+}

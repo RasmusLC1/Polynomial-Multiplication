@@ -13,6 +13,11 @@
 #include <gmp.h>
 #include "math.h"
 
+
+void mpz_to_complex_array(mpz_t input_int, complex double *output_array);
+
+int mpz_to_int_array(mpz_t input_int, int *output_array);
+
 // // Initialize a and b with inverse number, I.E 27 = a[0] = 7 and a[1] = 2
     // // Coefficient of x^0 = a[0] and x^1=a[1]
     // a[0] = 7; a[1] = 2; // Polynomial for 27

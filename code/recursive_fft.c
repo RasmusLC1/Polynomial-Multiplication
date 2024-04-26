@@ -3,11 +3,11 @@
 
 
 // Extended FFT function with allocated_memory parameters
-void Recursive_FFT_ext(complex double *f, int n, complex double *out,
+void Recursive_FFT_ext(complex double *input, int n, complex double *out,
             complex double *allocated_memory, int allocated_memory_size) {
     // Check if n == 1 and return f(1) (f[0])
     if (n == 1) {
-        out[0] = f[0];
+        out[0] = input[0];
         return;
     }
 
@@ -28,8 +28,8 @@ void Recursive_FFT_ext(complex double *f, int n, complex double *out,
     int i_double = 0;
     for (int i = 0; i < n_half; i++) {
         i_double = i << 1;
-        even_values[i] = f[i_double];
-        odd_values[i] = f[i_double + 1];
+        even_values[i] = input[i_double];
+        odd_values[i] = input[i_double + 1];
     }
 
     // Double recursive call, half the allocated memory since we are splitting the data
@@ -54,11 +54,23 @@ void Recursive_FFT_ext(complex double *f, int n, complex double *out,
     }
 }
 
+// FFT function to allocate memory and call actual FFT functionn
+void Recursive_FFT(complex double *input, int n, complex double *out) {
+    // Assign memory outside the recursive loop to save overhead
+    // We need 4 arrays, in_even, in_odd, out_even and out_odd. Therefore we need 4 * n
+    int n_bitshifted = n << 2; // * 4
+    complex double *allocated_memory = (complex double *)malloc(n_bitshifted * sizeof(complex double));
+    
+    // Call the actual function
+    Recursive_FFT_ext(input, n, out, allocated_memory, n);
+    free(allocated_memory);
+}
+
 // Extended IFFT function with allocated_memory parameters
-void Recursive_IFFT_ext(complex double *f, int n, complex double *out,
+void Recursive_IFFT_ext(complex double *input, int n, complex double *out,
                 complex double *allocated_memory, int allocated_memory_size) {
     if (n == 1) {
-        out[0] = f[0];
+        out[0] = input[0];
         return;
     }
     // Save n/2 in a variable to save computations
@@ -78,8 +90,8 @@ void Recursive_IFFT_ext(complex double *f, int n, complex double *out,
     int i_double = 0;
     for (int i = 0; i < n_half; i++) {
         i_double = i << 1;
-        even_values[i] = f[i_double];
-        odd_values[i] = f[i_double + 1];
+        even_values[i] = input[i_double];
+        odd_values[i] = input[i_double + 1];
     }
 
     // Double recursive call, half the allocated memory since we are splitting the data
@@ -99,27 +111,17 @@ void Recursive_IFFT_ext(complex double *f, int n, complex double *out,
     }
 }
 
-// Wrapper function for FFT to handle allocated_memory allocation
-void Recursive_FFT(complex double *input, int n, complex double *out) {
-    // Assign memory outside the recursive loop to save overhead
-    // We need 4 arrays, in_even, in_odd, out_even and out_odd. Therefore we need 4 * n
-    int n_bitshifted = n << 2; // * 4
-    complex double *allocated_memory = (complex double *)malloc(n_bitshifted * sizeof(complex double));
-    
-    // Call the actual function
-    Recursive_FFT_ext(input, n, out, allocated_memory, n >> 2);
-    free(allocated_memory);
-}
 
 
-// IFFT function to handle allocated_memory allocation and call actual IFFT function
-void Recursive_IFFT(complex double *f, int n, complex double *out) {
+
+// IFFT function to allocate memory and call actual IFFT function
+void Recursive_IFFT(complex double *input, int n, complex double *out) {
     // Assign memory outside the recursive loop to save overhead
     int n_bitshifted = n << 2; // * 4
     complex double *allocated_memory = (complex double *)malloc(n_bitshifted * sizeof(complex double));
     
     // Call the actual function
-    Recursive_IFFT_ext(f, n, out, allocated_memory, n >> 2);
+    Recursive_IFFT_ext(input, n, out, allocated_memory, n);
     free(allocated_memory);
 
     // Normalize the output by dividing by n
@@ -139,8 +141,8 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* recursive
     memset(padded_b, 0, n * sizeof(complex double));
     memset(fft_result, 0, n * sizeof(complex double));
 
-    mpz_to_array(a, padded_a);
-    mpz_to_array(b, padded_b);
+    mpz_to_complex_array(a, padded_a);
+    mpz_to_complex_array(b, padded_b);
 
     // // Apply FFT to both polynomials
     complex double fa[n], fb[n];
