@@ -44,15 +44,7 @@ long long karatsuba(long long num1, long long num2){
 
 long long polynomial_multiply_karatsuba(long a, long b, int n){
     
-    bool negative = false;
-
-    if (a < 0 && b >= 0){
-        negative = true;
-        a *= -1;
-    } else if (b < 0 && a >= 0){
-        negative = true;
-        b *= -1;
-    }
+    
     
     long long karatsuba_total_result = karatsuba(a, b);
 
@@ -70,7 +62,6 @@ long long polynomial_multiply_karatsuba(long a, long b, int n){
     
     Int_to_Array(a, padded_a);
     Int_to_Array(b, padded_b);
-    // End of Filler
     
 
     return karatsuba_total_result;

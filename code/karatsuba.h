@@ -31,6 +31,6 @@ void Karatsuba_Recursive(int *input1, int *input2, int degree, int *result, int 
 
 void Karatsuba_Multiply(int *input1, int *input2, int degree, int *result);
 
-void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t karatsuba_total_result);
+void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_total_result);
 
 #endif

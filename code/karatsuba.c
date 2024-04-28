@@ -122,33 +122,121 @@ void Karatsuba_Multiply(int *input1, int *input2, int degree, int *result) {
     free(allocated_memory);
 }
 
-void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t karatsuba_total_result) {
-    int *padded_a = calloc(n, sizeof(int));
-    int *padded_b = calloc(n, sizeof(int));
-    int *karatsuba_result = calloc(2 * n, sizeof(int));
+// Helper functions
+void Array_Addition(int *a, int *b, int length, int *result) {
+    for (int i = 0; i < length; i++) {
+        result[i] = a[i] + b[i];
+    }
+}
 
-    mpz_to_int_array(a, padded_a); // Assume correct implementation
-    mpz_to_int_array(b, padded_b);
+void Array_Subtraction(int *a, int *b, int length, int *result) {
+    for (int i = 0; i < length; i++) {
+        result[i] = a[i] - b[i];
+    }
+}
 
-    Karatsuba_Multiply(padded_a, padded_b, n, karatsuba_result);
+void Array_Multiplication(int *input1, int *input2, int length_input1, int length_input2, int *result) {
+    memset(result, 0, (length_input1 + length_input2 - 1) * sizeof(int)); // Clearing result buffer
+    for (int i = 0; i < length_input1; i++) {
+        for (int j = 0; j < length_input2; j++) {
+            result[i + j] += input1[i] * input2[j];
+        }
+    }
+}
 
-    mpz_set_ui(karatsuba_total_result, 0); // Initialize result
-    mpz_t temp, power;
-    mpz_inits(temp, power, NULL);
+// Karatsuba multiplication for polynomials
+void Karatsuba_Recursive2(int *input1, int *input2, int length_input1, int length_input2, int *result) {
+    if (length_input1 == 1 || length_input2 == 1) { // Base case for the smallest size
+        Array_Multiplication(input1, input2, length_input1, length_input2, result);
+        return;
+    }
 
-    for (int i = 0; i < 2 * n; i++) {
-        if (karatsuba_result[i] != 0) {
-            mpz_ui_pow_ui(power, 10, i);
-            mpz_set_si(temp, karatsuba_result[i]);
-            mpz_mul(temp, temp, power);
-            mpz_add(karatsuba_total_result, karatsuba_total_result, temp);
+    int half_length1 = length_input1 / 2;
+    int half_length2 = length_input2 / 2;
+
+    // Calculate sizes of the 'high' parts
+    int high_length1 = length_input1 - half_length1;
+    int high_length2 = length_input2 - half_length2;
+
+    int *low1 = calloc(half_length1, sizeof(int));
+    int *low2 = calloc(half_length2, sizeof(int));
+    int *high1 = calloc(high_length1, sizeof(int));
+    int *high2 = calloc(high_length2, sizeof(int));
+    int *result_low = calloc(2 * (length_input1 + length_input2 - 1), sizeof(int));
+    int *result_high = calloc(2 * (length_input1 + length_input2 - 1), sizeof(int));
+    int *result_middle = calloc(2 * (length_input1 + length_input2 - 1), sizeof(int));
+
+    memcpy(low1, input1, half_length1 * sizeof(int));
+    memcpy(low2, input2, half_length2 * sizeof(int));
+    memcpy(high1, input1 + half_length1, high_length1 * sizeof(int));
+    memcpy(high2, input2 + half_length2, high_length2 * sizeof(int));
+
+    int low1_length = sizeof(low1);
+
+    Karatsuba_Recursive2(low1, low2, half_length1, half_length2, result_low);
+    Karatsuba_Recursive2(high1, high2, high_length1, high_length2, result_high);
+
+    int *temp1 = calloc(high_length1, sizeof(int));
+    int *temp2 = calloc(high_length2, sizeof(int));
+    Array_Addition(low1, high1, half_length1, temp1);
+    Array_Addition(low2, high2, half_length2, temp2);
+    Karatsuba_Recursive2(temp1, temp2, high_length1, high_length2, result_middle);
+
+    // Combine results
+    for (int i = 0; i < length_input1 + length_input2 - 1; i++) {
+        result[i] += result_low[i];
+        if (i >= half_length1 && i < length_input1 + length_input2 - 1) {
+            result[i] += result_middle[i - half_length1] - result_low[i - half_length1] - result_high[i - half_length1];
+        }
+        if (i >= half_length1 + half_length2 && i < length_input1 + length_input2 - 1) {
+            result[i] += result_high[i - half_length1 - half_length2];
         }
     }
 
-    mpz_clears(temp, power, NULL);
-    free(padded_a);
-    free(padded_b);
-    free(karatsuba_result);
+    // Free memory
+    free(low1);
+    free(low2);
+    free(high1);
+    free(high2);
+    free(result_low);
+    free(result_high);
+    free(result_middle);
+    free(temp1);
+    free(temp2);
+}
 
-    gmp_printf("a: %Zd\nb: %Zd\nkaratsuba_total_result: %Zd\n", a, b, karatsuba_total_result);
+
+void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_total_result) {
+    int padded_a[n], padded_b[n], karatsuba_result[n];
+
+    memset(padded_a, 0, n * sizeof(int));
+    memset(padded_b, 0, n * sizeof(int));
+    memset(karatsuba_result, 0, n * sizeof(int));
+
+    int length_input1 = mpz_to_int_array(a, padded_a); // Assume correct implementation
+    int length_input2 = mpz_to_int_array(b, padded_b);
+
+
+    Karatsuba_Recursive2(padded_a, padded_b, length_input1, length_input2, karatsuba_result);
+
+    // //Convert to the real number
+    mpz_t temp, result, power;
+
+    // The below for loop is calculating the following line using GMP
+    // FFT_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
+    for (int i = 0; i < n; i++) {
+        mpz_inits(temp, result, power, NULL);
+        // Calculate 10^i using GMP
+        mpz_ui_pow_ui(power, 10, i);
+
+        // Convert creal(result[i]) to nearest integer and multiply by 10^i
+        mpz_set_d(temp, floor(creal(karatsuba_result[i]) + 0.5));
+        mpz_mul(result, temp, power);
+
+        // Add to the total result
+        mpz_add(karatsuba_total_result, karatsuba_total_result, result);
+        // Cleanup
+        mpz_clears(temp, result, power, NULL);
+   
+    }
 }

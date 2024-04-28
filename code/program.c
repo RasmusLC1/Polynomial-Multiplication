@@ -6,7 +6,7 @@
 #include "Helper_Functions.h"
 
 void Polynomial_Multiply() {
-    int n = 16 ; // test size needs to be power 2
+    int n = 516 ; // test size needs to be power 2
     int iterations = 10;
     // Set up correctness meassure
     int fail = 0, success = 0;

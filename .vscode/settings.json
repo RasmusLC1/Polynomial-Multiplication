@@ -7,6 +7,9 @@
         "time.h": "c",
         "complex": "c",
         "iterator": "c",
-        "memory": "c"
+        "memory": "c",
+        "xstring": "c",
+        "xmemory": "c",
+        "whitebox_test.h": "c"
     }
 }
