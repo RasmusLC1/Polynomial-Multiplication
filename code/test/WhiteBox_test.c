@@ -4,53 +4,55 @@
 mpz_t global_a_value;
 mpz_t global_b_value;
 mpz_t global_expected_result;
+int n;
 
 
 START_TEST(DFT_test_basic_multiplication) {
-    int n = 16; // test size needs to be power 2
 
-    // Compute polynomial multiplication using DFT
     mpz_t result_dft;
     mpz_init(result_dft);
-    polynomial_multiply_DFT(global_a_value, global_b_value, n, result_dft); 
-    ck_assert_msg(Correctness_Check(result_dft, global_expected_result),
-        "DFT result was %ld, expected %ld", result_dft, global_expected_result);
+    polynomial_multiply_DFT(global_a_value, global_b_value, n, &result_dft); 
+    if (!Correctness_Check(result_dft, global_expected_result)) {
+        gmp_printf("DFT result was %Zd, expected %Zd\n", result_dft, global_expected_result);
+        ck_abort_msg("DFT did not produce the expected result.");
+    }
 }
 END_TEST
 
 START_TEST(Karatsuba_test_basic_multiplication) {
-    int n = 16; // test size needs to be power 2
-
     // Compute polynomial multiplication using DFT
     mpz_t result_karatsuba;
     mpz_init(result_karatsuba);
-    polynomial_multiply_karatsuba(global_a_value, global_b_value, n, result_karatsuba); 
-    ck_assert_msg(Correctness_Check(result_karatsuba, global_expected_result),
-        "DFT result was %ld, expected %ld", result_karatsuba, global_expected_result);
+    polynomial_multiply_karatsuba(global_a_value, global_b_value, n, &result_karatsuba); 
+    if (!Correctness_Check(result_karatsuba, global_expected_result)) {
+        gmp_printf("Karatsuba result was %Zd, expected %Zd\n", result_karatsuba, global_expected_result);
+        ck_abort_msg("Karatsuba did not produce the expected result.");
+    }
 }
 END_TEST
 
 START_TEST(Recursive_FFT_test_basic_multiplication) {
-    int n = 16; // test size needs to be power 2
+    
 
-    // Compute polynomial multiplication using DFT
     mpz_t result_Recursive_FFT;
     mpz_init(result_Recursive_FFT);
-    polynomial_multiply_Recursive_FFT(global_a_value, global_b_value, n, result_Recursive_FFT); 
-    ck_assert_msg(Correctness_Check(result_Recursive_FFT, global_expected_result),
-        "DFT result was %ld, expected %ld", result_Recursive_FFT, global_expected_result);
+    polynomial_multiply_Recursive_FFT(global_a_value, global_b_value, n, &result_Recursive_FFT); 
+    if (!Correctness_Check(result_Recursive_FFT, global_expected_result)) {
+        gmp_printf("Recursive FFT result was %Zd, expected %Zd\n", result_Recursive_FFT, global_expected_result);
+        ck_abort_msg("Recursive FFT did not produce the expected result.");
+    }
 }
 END_TEST
 
 START_TEST(Iterative_FFT_test_basic_multiplication) {
-    int n = 16; // test size needs to be power 2
-
     // Compute polynomial multiplication using DFT
     mpz_t result_Iterative_FFT;
     mpz_init(result_Iterative_FFT);
-    polynomial_multiply_iterative_FFT(global_a_value, global_b_value, n, result_Iterative_FFT); 
-    ck_assert_msg(Correctness_Check(result_Iterative_FFT, global_expected_result),
-        "DFT result was %ld, expected %ld", result_Iterative_FFT, global_expected_result);
+    polynomial_multiply_iterative_FFT(global_a_value, global_b_value, n, &result_Iterative_FFT); 
+    if (!Correctness_Check(result_Iterative_FFT, global_expected_result)) {
+        gmp_printf("Iterative FFT result was %Zd, expected %Zd\n", result_Iterative_FFT, global_expected_result);
+        ck_abort_msg("Iterative FFT did not produce the expected result.");
+    }
 }
 END_TEST
 
@@ -64,8 +66,9 @@ void Call_Test(TCase *Case){
 
 void add_basic_multiplication_tests(TCase *tc_basic) {
     // Basic multiplication tests except zero
-    char num_str_i[20];
-    char num_str_j[20];
+    n = 8;
+    char num_str_i[n];
+    char num_str_j[n];
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
             snprintf(num_str_i, sizeof(num_str_i), "%d", i);  
@@ -106,6 +109,8 @@ void zero_multiplication_tests(TCase *tc_zero) {
 
 
 Suite* Zero_test_suite(void) {
+    n = 8;
+
     Suite *s = suite_create("ZeroSuite");
     
    // Create test case for zero multiplication tests
@@ -129,7 +134,7 @@ void Large_Numbers_tests(TCase *tc_large) {
     gmp_randstate_t state;
     gmp_randinit_default(state);
     gmp_randseed_ui(state, time(NULL));
-    int n = 1024;
+    n = 1024;
     
     
     for (int i = 0; i < 10; i++) {
@@ -165,6 +170,7 @@ void Large_Numbers_test_Setup(){
 }
 
 void Negative_Tests(TCase *tc_negative) {
+    n = 8;
     mpz_set_str(global_a_value, "-5", 10);
     mpz_set_str(global_b_value, "5", 10);
     mpz_mul(global_expected_result, global_a_value, global_b_value);
@@ -191,7 +197,8 @@ void Negative_Setup(){
 
 
 void Even_Polynomial_Test(TCase *tc_even) {
-    char num_str[20];
+    n = 16;
+    char num_str[n];
     int test_size = 40000;
     for (int i = test_size; i < test_size + 100; i++) {
         snprintf(num_str, sizeof(num_str), "%d", i);
@@ -227,7 +234,8 @@ void Even_Polynomial_Setup(){
 
 
 void Uneven_Polynomial_Test(TCase *tc_uneven) {
-    char num_str[20];
+    n = 16;
+    char num_str[n];
     int test_size = 40000;
     for (int i = test_size; i < test_size + 100; i++) {
         snprintf(num_str, sizeof(num_str), "%d", i);

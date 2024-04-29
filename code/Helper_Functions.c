@@ -1,5 +1,6 @@
 #include "Helper_Functions.h"
 
+
 void mpz_to_complex_array(mpz_t input_int, complex double *output_array) {
     // Convert mpz_t to a string
     char *int_str = mpz_get_str(NULL, 10, input_int); // Base 10 representation
@@ -20,9 +21,9 @@ int mpz_to_int_array(mpz_t input_int, int *output_array) {
     // Convert mpz_t to a string
     char *int_str = mpz_get_str(NULL, 10, input_int); // Base 10 representation
     int len = strlen(int_str);
-    int i = 0;
+    int i;
     // Store digits in reverse order
-    for (i; i < len; i++) {
+    for (i = 0; i < len; i++) {
         // Convert character to integer (digit)
         int digit = int_str[len - 1 - i] - '0'; // Reverse the index to store in reverse order
         output_array[i] = digit; // Store as complex double, imaginary part is 0

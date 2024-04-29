@@ -21,7 +21,7 @@ void Polynomial_Multiply() {
 
     // Set up timers
     double time_default = 0.0, time_dft = 0.0, time_fft = 0.0,
-            time_iterative_fft = 0.0, time_karatsuba = 0.0, time_standard = 0.0;
+            time_iterative_fft = 0.0, time_karatsuba = 0.0;
     struct timespec start, end;
     double elapsed_time;
 
@@ -61,7 +61,7 @@ void Polynomial_Multiply() {
 
         // Karatsuba test
         clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_karatsuba(random_Value_a, random_Value_b, n, result_karatsuba);
+        polynomial_multiply_karatsuba(random_Value_a, random_Value_b, n, &result_karatsuba);
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_karatsuba += elapsed_time - time_default;

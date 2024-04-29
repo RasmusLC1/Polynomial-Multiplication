@@ -5,3 +5,4 @@
 #include "../karatsuba.h"
 #include <check.h>
 
+void Test_Setup();

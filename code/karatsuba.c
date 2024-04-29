@@ -1,7 +1,6 @@
 #include "karatsuba.h"
 
 
-// NOT WORKING
 // Recursive Karatsuba multiplication
 void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result) {
     // Base case: if either number is small
@@ -129,7 +128,6 @@ void Karatsuba_Polynomial(int *input1, int *input2, int length_input1, int lengt
             result[i] += result_high[i - 2 * half_length];
         }
     }
-
     free(low1);
     free(low2);
     free(high1);
@@ -171,7 +169,6 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_tot
 
 
     Karatsuba_Polynomial(padded_a, padded_b, length_input1, length_input2, karatsuba_result);
-
     // //Convert to the real number
     mpz_t temp, result, power;
 
@@ -187,14 +184,14 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_tot
         mpz_mul(result, temp, power);
 
         // Add to the total result
-        mpz_add(karatsuba_total_result, karatsuba_total_result, result);
+        mpz_add(karatsuba_total_result[0], karatsuba_total_result[0], result);
         // Cleanup
         mpz_clears(temp, result, power, NULL);
     }
 
     // Add correct sign back
     if (negative){
-        mpz_mul(karatsuba_total_result, karatsuba_total_result, negative_value);
+        mpz_mul(karatsuba_total_result[0], karatsuba_total_result[0], negative_value);
         mpz_clear(negative_value);
     }
 

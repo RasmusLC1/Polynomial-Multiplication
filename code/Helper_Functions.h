@@ -13,6 +13,8 @@
 #include <gmp.h>
 #include "math.h"
 
+#define TAU 6.283185307179586
+
 
 void mpz_to_complex_array(mpz_t input_int, complex double *output_array);
 

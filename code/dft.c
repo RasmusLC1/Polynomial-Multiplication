@@ -90,14 +90,14 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
         mpz_mul(result, temp, power);
 
         // Add to the total result
-        mpz_add(dft_total_result, dft_total_result, result);
+        mpz_add(dft_total_result[0], dft_total_result[0], result);
         // Cleanup
         mpz_clears(temp, result, power, NULL);
 
     }
 
     if (negative){
-        mpz_mul(dft_total_result, dft_total_result, negative_value);
+        mpz_mul(dft_total_result[0], dft_total_result[0], negative_value);
         mpz_clear(negative_value);
     }
 

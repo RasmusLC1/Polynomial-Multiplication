@@ -188,7 +188,7 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* recursive
         mpz_mul(result, temp, power);
 
         // Add to the total result
-        mpz_add(recursive_fft_total_result, recursive_fft_total_result, result);
+        mpz_add(recursive_fft_total_result[0], recursive_fft_total_result[0], result);
         // Cleanup
         mpz_clears(temp, result, power, NULL);
    
@@ -196,7 +196,7 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* recursive
 
     // Add correct sign back
     if (negative){
-        mpz_mul(recursive_fft_total_result, recursive_fft_total_result, negative_value);
+        mpz_mul(recursive_fft_total_result[0], recursive_fft_total_result[0], negative_value);
         mpz_clear(negative_value);
     }
 

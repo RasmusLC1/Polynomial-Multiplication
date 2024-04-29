@@ -149,16 +149,15 @@ void polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n, mpz_t* iterative
         // Convert creal(result[i]) to nearest integer and multiply by 10^i
         mpz_set_d(temp, floor(creal(fft_result[i]) + 0.5));
         mpz_mul(result, temp, power);
-
         // Add to the total result
-        mpz_add(iterative_fft_total_result, iterative_fft_total_result, result);
+        mpz_add(iterative_fft_total_result[0], iterative_fft_total_result[0], result);
         // Cleanup
         mpz_clears(temp, result, power, NULL);
    
     }
     // Add correct sign back
     if (negative){
-        mpz_mul(iterative_fft_total_result, iterative_fft_total_result, negative_value);
+        mpz_mul(iterative_fft_total_result[0], iterative_fft_total_result[0], negative_value);
         mpz_clear(negative_value);
     }
 
