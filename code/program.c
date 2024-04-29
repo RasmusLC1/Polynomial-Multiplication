@@ -6,8 +6,8 @@
 #include "Helper_Functions.h"
 
 void Polynomial_Multiply() {
-    int n = 516 ; // test size needs to be power 2
-    int iterations = 10;
+    int n = 256 ; // test size needs to be power 2
+    int iterations = 100;
     // Set up correctness meassure
     int fail = 0, success = 0;
 
@@ -67,12 +67,15 @@ void Polynomial_Multiply() {
         time_karatsuba += elapsed_time - time_default;
 
         
-
         if (Correctness_Check(result_dft, result_iterative_fft) &&
             Correctness_Check(result_dft, result_recursive_fft) &&
             Correctness_Check(result_dft, result_karatsuba)){
                 success++;
         }else{
+            gmp_printf("Value of a is: %Zd\n", random_Value_a);        
+            gmp_printf("Value of b is: %Zd\n", random_Value_b);        
+            gmp_printf("Value of karatsuaba is: %Zd\n", result_karatsuba);        
+
             fail ++;
         }
         // Clear the space allocated for the number and the random state

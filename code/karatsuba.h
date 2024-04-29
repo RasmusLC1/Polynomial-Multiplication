@@ -27,7 +27,7 @@
 void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result);
 
 
-void Karatsuba_Recursive(int *input1, int *input2, int degree, int *result, int *temp_storage) ;
+// void Karatsuba_Recursive(int *input1, int *input2, int degree, int *result, int *temp_storage) ;
 
 void Karatsuba_Multiply(int *input1, int *input2, int degree, int *result);
 

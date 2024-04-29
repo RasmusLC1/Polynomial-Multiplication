@@ -71,57 +71,6 @@ void subtract(int *a, int *b, int n) {
     }
 }
 
-void Karatsuba_Recursive(int *input1, int *input2, int degree, int *result, int *temp_storage) {
-    if (degree <= 8) {
-        // Use naive multiplication for small degree
-        for (int i = 0; i < degree; i++) {
-            for (int j = 0; j < degree; j++) {
-                result[i + j] += input1[i] * input2[j];
-            }
-        }
-        return;
-    }
-
-    int mid = degree / 2;
-
-    int *low1 = input1;
-    int *high1 = input1 + mid;
-    int *low2 = input2;
-    int *high2 = input2 + mid;
-
-    int *z0 = temp_storage;
-    int *z1 = temp_storage + degree;
-    int *z2 = temp_storage + 2 * degree;
-    int *tmp = temp_storage + 3 * degree;
-
-    Karatsuba_Recursive(low1, low2, mid, z0, temp_storage);
-    Karatsuba_Recursive(high1, high2, degree - mid, z2, temp_storage);
-
-    add(low1, high1, mid);
-    add(low2, high2, mid);
-    Karatsuba_Recursive(low1, low2, mid, z1, tmp);
-    subtract(z1, z0, degree);
-    subtract(z1, z2, degree);
-
-    memcpy(result, z0, 2 * degree * sizeof(int));
-    add(result + mid, z1, degree);
-    add(result + degree, z2, degree);
-}
-
-void Karatsuba_Multiply(int *input1, int *input2, int degree, int *result) {
-    int new_degree = 1;
-    while (new_degree < degree) {
-        new_degree <<= 1; // Find the next power of 2 greater than degree
-    }
-
-    int *allocated_memory = (int *)malloc(12 * new_degree * sizeof(int));
-    memset(result, 0, 2 * new_degree * sizeof(int));
-
-    Karatsuba_Recursive(input1, input2, new_degree, result, allocated_memory);
-
-    free(allocated_memory);
-}
-
 // Helper functions
 void Array_Addition(int *a, int *b, int length, int *result) {
     for (int i = 0; i < length; i++) {
@@ -145,55 +94,66 @@ void Array_Multiplication(int *input1, int *input2, int length_input1, int lengt
 }
 
 // Karatsuba multiplication for polynomials
-void Karatsuba_Recursive2(int *input1, int *input2, int length_input1, int length_input2, int *result) {
+void Karatsuba_Recursive(int *input1, int *input2, int length_input1, int length_input2, int *result) {
     if (length_input1 == 1 || length_input2 == 1) { // Base case for the smallest size
         Array_Multiplication(input1, input2, length_input1, length_input2, result);
         return;
     }
 
-    int half_length1 = length_input1 / 2;
-    int half_length2 = length_input2 / 2;
+    int half_length1 = (length_input1 >> 1) + (length_input1 % 2);
+    int half_length2 = (length_input2 >> 1) + (length_input2 % 2);
 
-    // Calculate sizes of the 'high' parts
-    int high_length1 = length_input1 - half_length1;
-    int high_length2 = length_input2 - half_length2;
+    int half_length;
 
-    int *low1 = calloc(half_length1, sizeof(int));
-    int *low2 = calloc(half_length2, sizeof(int));
-    int *high1 = calloc(high_length1, sizeof(int));
-    int *high2 = calloc(high_length2, sizeof(int));
-    int *result_low = calloc(2 * (length_input1 + length_input2 - 1), sizeof(int));
-    int *result_high = calloc(2 * (length_input1 + length_input2 - 1), sizeof(int));
-    int *result_middle = calloc(2 * (length_input1 + length_input2 - 1), sizeof(int));
-
-    memcpy(low1, input1, half_length1 * sizeof(int));
-    memcpy(low2, input2, half_length2 * sizeof(int));
-    memcpy(high1, input1 + half_length1, high_length1 * sizeof(int));
-    memcpy(high2, input2 + half_length2, high_length2 * sizeof(int));
-
-    int low1_length = sizeof(low1);
-
-    Karatsuba_Recursive2(low1, low2, half_length1, half_length2, result_low);
-    Karatsuba_Recursive2(high1, high2, high_length1, high_length2, result_high);
-
-    int *temp1 = calloc(high_length1, sizeof(int));
-    int *temp2 = calloc(high_length2, sizeof(int));
-    Array_Addition(low1, high1, half_length1, temp1);
-    Array_Addition(low2, high2, half_length2, temp2);
-    Karatsuba_Recursive2(temp1, temp2, high_length1, high_length2, result_middle);
-
-    // Combine results
-    for (int i = 0; i < length_input1 + length_input2 - 1; i++) {
-        result[i] += result_low[i];
-        if (i >= half_length1 && i < length_input1 + length_input2 - 1) {
-            result[i] += result_middle[i - half_length1] - result_low[i - half_length1] - result_high[i - half_length1];
-        }
-        if (i >= half_length1 + half_length2 && i < length_input1 + length_input2 - 1) {
-            result[i] += result_high[i - half_length1 - half_length2];
-        }
+    if (half_length1 >= half_length2) {
+        half_length = half_length1;
+    } else {
+        half_length = half_length2;
     }
 
-    // Free memory
+    int *low1 = calloc(half_length, sizeof(int));
+    int *low2 = calloc(half_length, sizeof(int));
+    int *high1 = calloc(half_length, sizeof(int));
+    int *high2 = calloc(half_length, sizeof(int));
+    int *result_low = calloc(length_input1 + length_input2 - 1, sizeof(int));
+    int *result_high = calloc(length_input1 + length_input2 - 1, sizeof(int));
+    int *result_middle = calloc(length_input1 + length_input2 - 1, sizeof(int));
+
+    memcpy(low1, input1, half_length * sizeof(int));
+    memcpy(low2, input2, half_length * sizeof(int));
+    memcpy(high1, input1 + half_length, (length_input1 - half_length1) * sizeof(int));
+    memcpy(high2, input2 + half_length, (length_input2 - half_length2) * sizeof(int));
+    Karatsuba_Recursive(low1, low2, half_length, half_length, result_low);
+    Karatsuba_Recursive(high1, high2, half_length, half_length, result_high);
+
+    int *temp1 = calloc(half_length, sizeof(int));
+    int *temp2 = calloc(half_length, sizeof(int));
+    Array_Addition(low1, high1, half_length, temp1);
+    Array_Addition(low2, high2, half_length, temp2);
+    Karatsuba_Recursive(temp1, temp2, half_length, half_length, result_middle);
+
+    // Calculate middle coefficients (result_middle = result_middle - result_low - result_high)
+    Array_Subtraction(result_middle, result_low, length_input1 + length_input2 - 1, result_middle);
+    Array_Subtraction(result_middle, result_high, length_input1 + length_input2 - 1, result_middle);
+
+    // Assemble final result
+    // result = result_low + (result_middle << half_length1) + (result_high << (half_length1 * 2))
+    int max_length = length_input1 + length_input2 - 1;
+
+for (int i = 0; i < max_length; i++) {
+  result[i] = result_low[i];  // Set result to low part (avoid unnecessary comparison)
+
+  // Add middle part if within its valid range (half_length1 <= i < max_length)
+  if (i >= half_length) {
+    result[i] += result_middle[i - half_length];
+  }
+
+  // Add high part if within its valid range (2 * half_length1 <= i < max_length)
+  if (i >= 2 * half_length) {
+    result[i] += result_high[i - 2 * half_length];
+  }
+}
+
     free(low1);
     free(low2);
     free(high1);
@@ -217,7 +177,7 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_tot
     int length_input2 = mpz_to_int_array(b, padded_b);
 
 
-    Karatsuba_Recursive2(padded_a, padded_b, length_input1, length_input2, karatsuba_result);
+    Karatsuba_Recursive(padded_a, padded_b, length_input1, length_input2, karatsuba_result);
 
     // //Convert to the real number
     mpz_t temp, result, power;
