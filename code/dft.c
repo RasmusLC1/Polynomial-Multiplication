@@ -35,7 +35,21 @@ void IDFT(complex double *in, int n, complex double *out) {
 
 void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
     
-   
+    // Check for negative numbers
+    bool negative = false;
+    mpz_t negative_value;
+    // Negative check
+    if (mpz_sgn(a) < 0 && mpz_sgn(b) >= 0){
+        negative = true;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(a, a, negative_value);
+    } else if (mpz_sgn(b) < 0 && mpz_sgn(a) >= 0){
+        negative = true;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(b, b, negative_value);
+    }
     
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
@@ -63,7 +77,7 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
 
     // //Convert to the real number
     mpz_t temp, result, power;
-    
+
     // dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
     for (int i = 0; i < n; i++) {
         mpz_inits(temp, result, power, NULL);
@@ -79,12 +93,17 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
         mpz_add(dft_total_result, dft_total_result, result);
         // Cleanup
         mpz_clears(temp, result, power, NULL);
-  
+
+    }
+
+    if (negative){
+        mpz_mul(dft_total_result, dft_total_result, negative_value);
+        mpz_clear(negative_value);
     }
 
         // dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
 
-    
+
     return;
 
 }

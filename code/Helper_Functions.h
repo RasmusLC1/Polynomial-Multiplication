@@ -36,4 +36,10 @@ unsigned int Bit_Reverse(unsigned int x, int log2n);
 // calculate the half length of a value
 int get_half_length(mpz_t num);
 
+void Array_Addition(int *a, int *b, int length, int *result);
+
+void Array_Subtraction(int *a, int *b, int length, int *result);
+
+void Array_Multiplication(int *input1, int *input2, int length_input1, int length_input2, int *result);
+
 #endif

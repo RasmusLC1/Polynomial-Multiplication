@@ -133,6 +133,22 @@ void Recursive_IFFT(complex double *input, int n, complex double *out) {
 
 void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* recursive_fft_total_result) {
 
+    // Check for negative numbers
+    bool negative = false;
+    mpz_t negative_value;
+    // Negative check
+    if (mpz_sgn(a) < 0 && mpz_sgn(b) >= 0){
+        negative = true;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(a, a, negative_value);
+    } else if (mpz_sgn(b) < 0 && mpz_sgn(a) >= 0){
+        negative = true;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(b, b, negative_value);
+    }
+
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
     // Arrays help structure the data into parts
@@ -176,6 +192,12 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* recursive
         // Cleanup
         mpz_clears(temp, result, power, NULL);
    
+    }
+
+    // Add correct sign back
+    if (negative){
+        mpz_mul(recursive_fft_total_result, recursive_fft_total_result, negative_value);
+        mpz_clear(negative_value);
     }
 
     return;

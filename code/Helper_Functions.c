@@ -104,3 +104,25 @@ int get_half_length(mpz_t num) {
     mpz_get_str(num_str, 10, num);  // Convert number to string base 10
     return strlen(num_str) / 2;  // Half the length of the number in digits
 }
+
+// Helper functions
+void Array_Addition(int *a, int *b, int length, int *result) {
+    for (int i = 0; i < length; i++) {
+        result[i] = a[i] + b[i];
+    }
+}
+
+void Array_Subtraction(int *a, int *b, int length, int *result) {
+    for (int i = 0; i < length; i++) {
+        result[i] = a[i] - b[i];
+    }
+}
+
+void Array_Multiplication(int *input1, int *input2, int length_input1, int length_input2, int *result) {
+    memset(result, 0, (length_input1 + length_input2 - 1) * sizeof(int)); // Clearing result buffer
+    for (int i = 0; i < length_input1; i++) {
+        for (int j = 0; j < length_input2; j++) {
+            result[i + j] += input1[i] * input2[j];
+        }
+    }
+}

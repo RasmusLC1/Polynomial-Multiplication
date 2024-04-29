@@ -59,58 +59,29 @@ void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result) {
     mpz_clears(high1, high2, low1, low2, product_low, product_middle, product_high, temp, temp2, split_factor, NULL);
 }
 
-void add(int *a, int *b, int n) {
-    for (int i = 0; i < n; i++) {
-        a[i] += b[i];
-    }
-}
-
-void subtract(int *a, int *b, int n) {
-    for (int i = 0; i < n; i++) {
-        a[i] -= b[i];
-    }
-}
-
-// Helper functions
-void Array_Addition(int *a, int *b, int length, int *result) {
-    for (int i = 0; i < length; i++) {
-        result[i] = a[i] + b[i];
-    }
-}
-
-void Array_Subtraction(int *a, int *b, int length, int *result) {
-    for (int i = 0; i < length; i++) {
-        result[i] = a[i] - b[i];
-    }
-}
-
-void Array_Multiplication(int *input1, int *input2, int length_input1, int length_input2, int *result) {
-    memset(result, 0, (length_input1 + length_input2 - 1) * sizeof(int)); // Clearing result buffer
-    for (int i = 0; i < length_input1; i++) {
-        for (int j = 0; j < length_input2; j++) {
-            result[i + j] += input1[i] * input2[j];
-        }
-    }
-}
 
 // Karatsuba multiplication for polynomials
-void Karatsuba_Recursive(int *input1, int *input2, int length_input1, int length_input2, int *result) {
-    if (length_input1 == 1 || length_input2 == 1) { // Base case for the smallest size
+void Karatsuba_Polynomial(int *input1, int *input2, int length_input1, int length_input2, int *result) {
+    
+    // Check if either number is 2 digits, if yes then multiply.
+    // C is really fast for small number multiplication, so it doesn't need to check for 1 digit
+    if (length_input1 <= 2 || length_input2 <= 2) { // Base case for the smallest size
         Array_Multiplication(input1, input2, length_input1, length_input2, result);
         return;
     }
-
+    // Calculate half length
     int half_length1 = (length_input1 >> 1) + (length_input1 % 2);
     int half_length2 = (length_input2 >> 1) + (length_input2 % 2);
 
+    // Find the longest number and set it to half length
     int half_length;
-
     if (half_length1 >= half_length2) {
         half_length = half_length1;
     } else {
         half_length = half_length2;
     }
 
+    // Allocate memory
     int *low1 = calloc(half_length, sizeof(int));
     int *low2 = calloc(half_length, sizeof(int));
     int *high1 = calloc(half_length, sizeof(int));
@@ -119,18 +90,23 @@ void Karatsuba_Recursive(int *input1, int *input2, int length_input1, int length
     int *result_high = calloc(length_input1 + length_input2 - 1, sizeof(int));
     int *result_middle = calloc(length_input1 + length_input2 - 1, sizeof(int));
 
+    // Seperate the polynomials into highs and lows
     memcpy(low1, input1, half_length * sizeof(int));
     memcpy(low2, input2, half_length * sizeof(int));
     memcpy(high1, input1 + half_length, (length_input1 - half_length1) * sizeof(int));
     memcpy(high2, input2 + half_length, (length_input2 - half_length2) * sizeof(int));
-    Karatsuba_Recursive(low1, low2, half_length, half_length, result_low);
-    Karatsuba_Recursive(high1, high2, half_length, half_length, result_high);
+    
+    // First 2 recursive calls
+    Karatsuba_Polynomial(low1, low2, half_length, half_length, result_low);
+    Karatsuba_Polynomial(high1, high2, half_length, half_length, result_high);
 
+    // Third recursive call
+    // long long product_middle  = karatsuba(low1 + high1, low2 + high2);
     int *temp1 = calloc(half_length, sizeof(int));
     int *temp2 = calloc(half_length, sizeof(int));
     Array_Addition(low1, high1, half_length, temp1);
     Array_Addition(low2, high2, half_length, temp2);
-    Karatsuba_Recursive(temp1, temp2, half_length, half_length, result_middle);
+    Karatsuba_Polynomial(temp1, temp2, half_length, half_length, result_middle);
 
     // Calculate middle coefficients (result_middle = result_middle - result_low - result_high)
     Array_Subtraction(result_middle, result_low, length_input1 + length_input2 - 1, result_middle);
@@ -140,33 +116,50 @@ void Karatsuba_Recursive(int *input1, int *input2, int length_input1, int length
     // result = result_low + (result_middle << half_length1) + (result_high << (half_length1 * 2))
     int max_length = length_input1 + length_input2 - 1;
 
-for (int i = 0; i < max_length; i++) {
-  result[i] = result_low[i];  // Set result to low part (avoid unnecessary comparison)
+    for (int i = 0; i < max_length; i++) {
+        result[i] = result_low[i];  // Set result to low part
 
-  // Add middle part if within its valid range (half_length1 <= i < max_length)
-  if (i >= half_length) {
-    result[i] += result_middle[i - half_length];
-  }
+        // Add middle part if within its valid range
+        if (i >= half_length) {
+            result[i] += result_middle[i - half_length];
+        }
 
-  // Add high part if within its valid range (2 * half_length1 <= i < max_length)
-  if (i >= 2 * half_length) {
-    result[i] += result_high[i - 2 * half_length];
-  }
-}
+        // Add high part if within its valid range
+        if (i >= 2 * half_length) {
+            result[i] += result_high[i - 2 * half_length];
+        }
+    }
 
     free(low1);
     free(low2);
     free(high1);
     free(high2);
     free(result_low);
-    free(result_high);
     free(result_middle);
+    free(result_high);
     free(temp1);
     free(temp2);
 }
 
 
 void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_total_result) {
+    
+    // Check for negative numbers
+    bool negative = false;
+    mpz_t negative_value;
+    // Negative check
+    if (mpz_sgn(a) < 0 && mpz_sgn(b) >= 0){
+        negative = true;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(a, a, negative_value);
+    } else if (mpz_sgn(b) < 0 && mpz_sgn(a) >= 0){
+        negative = true;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(b, b, negative_value);
+    }
+    
     int padded_a[n], padded_b[n], karatsuba_result[n];
 
     memset(padded_a, 0, n * sizeof(int));
@@ -177,7 +170,7 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_tot
     int length_input2 = mpz_to_int_array(b, padded_b);
 
 
-    Karatsuba_Recursive(padded_a, padded_b, length_input1, length_input2, karatsuba_result);
+    Karatsuba_Polynomial(padded_a, padded_b, length_input1, length_input2, karatsuba_result);
 
     // //Convert to the real number
     mpz_t temp, result, power;
@@ -197,6 +190,13 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_tot
         mpz_add(karatsuba_total_result, karatsuba_total_result, result);
         // Cleanup
         mpz_clears(temp, result, power, NULL);
-   
     }
+
+    // Add correct sign back
+    if (negative){
+        mpz_mul(karatsuba_total_result, karatsuba_total_result, negative_value);
+        mpz_clear(negative_value);
+    }
+
+    return;
 }

@@ -5,7 +5,3 @@
 #include "../karatsuba.h"
 #include <check.h>
 
-// Global variables
-long long global_a_value;
-long long global_b_value;
-long long global_expected_result;
