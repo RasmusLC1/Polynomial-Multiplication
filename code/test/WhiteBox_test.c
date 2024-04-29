@@ -64,11 +64,15 @@ void Call_Test(TCase *Case){
 
 void add_basic_multiplication_tests(TCase *tc_basic) {
     // Basic multiplication tests except zero
+    char num_str_i[20];
+    char num_str_j[20];
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
-            mpz_set_str(global_a_value, "i", 10);
-            mpz_set_str(global_b_value, "j", 10);
-            mpz_mul(global_expected_result, global_a_value, global_b_value);
+            snprintf(num_str_i, sizeof(num_str_i), "%d", i);  
+            snprintf(num_str_j, sizeof(num_str_j), "%d", j);
+            mpz_set_str(global_a_value, num_str_i, 10);   
+            mpz_set_str(global_b_value, num_str_j, 10); 
+            mpz_mul(global_expected_result, global_a_value, global_b_value);  
             Call_Test(tc_basic);
         }
     }
@@ -76,7 +80,7 @@ void add_basic_multiplication_tests(TCase *tc_basic) {
 
 
 Suite* basic_math_suite(void) {
-    Suite *s = suite_create("MathSuite");
+    Suite *s = suite_create("BasicMathSuite");
     
     // Create test case for basic multiplication tests
     TCase *tc_basic = tcase_create("BasicMultiplication");
@@ -125,10 +129,10 @@ void Large_Numbers_tests(TCase *tc_large) {
     gmp_randstate_t state;
     gmp_randinit_default(state);
     gmp_randseed_ui(state, time(NULL));
-    int n = 256;
+    int n = 1024;
     
     
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10; i++) {
         // Generate a random number with n bits
         mpz_urandomb(global_a_value, state, n);
         mpz_urandomb(global_b_value, state, n);
@@ -186,6 +190,77 @@ void Negative_Setup(){
 }
 
 
+void Even_Polynomial_Test(TCase *tc_even) {
+    char num_str[20];
+    int test_size = 40000;
+    for (int i = test_size; i < test_size + 100; i++) {
+        snprintf(num_str, sizeof(num_str), "%d", i);
+        mpz_set_str(global_a_value, num_str, 10);
+        mpz_set_str(global_b_value, num_str, 10); 
+        mpz_mul(global_expected_result, global_a_value, global_b_value);
+        Call_Test(tc_even);
+
+        // Cleanup
+        mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
+        mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
+        
+    } 
+}
+
+
+Suite* Even_Polynomial_Test_suite(void) {
+    Suite *s = suite_create("evenSuite");
+    
+   // Create test case for zero multiplication tests
+    TCase *tc_even = tcase_create("EvenPolynomialHandling");
+    Even_Polynomial_Test(tc_even);
+    suite_add_tcase(s, tc_even);
+    return s;
+}
+
+
+void Even_Polynomial_Setup(){
+    SRunner *sr = srunner_create(Even_Polynomial_Test_suite());
+    srunner_run_all(sr, CK_NORMAL);
+    srunner_free(sr);
+}
+
+
+void Uneven_Polynomial_Test(TCase *tc_uneven) {
+    char num_str[20];
+    int test_size = 40000;
+    for (int i = test_size; i < test_size + 100; i++) {
+        snprintf(num_str, sizeof(num_str), "%d", i);
+        mpz_set_str(global_a_value, num_str, 10);
+        mpz_set_str(global_b_value, num_str, 10); 
+        mpz_mul(global_expected_result, global_a_value, global_b_value);
+        Call_Test(tc_uneven);
+
+        // Cleanup
+        mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
+        mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
+    } 
+}
+
+
+Suite* Uneven_Polynomial_Test_suite(void) {
+    Suite *s = suite_create("UnevenSuite");
+    
+   // Create test case for zero multiplication tests
+    TCase *tc_uneven = tcase_create("UnevenPolynomialHandling");
+    Uneven_Polynomial_Test(tc_uneven);
+    suite_add_tcase(s, tc_uneven);
+    return s;
+}
+
+
+void Uneven_Polynomial_Setup(){
+    SRunner *sr = srunner_create(Uneven_Polynomial_Test_suite());
+    srunner_run_all(sr, CK_NORMAL);
+    srunner_free(sr);
+}
+
+
 
 void Test_Setup(){
     mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
@@ -195,10 +270,17 @@ void Test_Setup(){
     Zero_Setup();
     mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
     mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
-    // Large_Numbers_test_Setup();
+    Large_Numbers_test_Setup();
     mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
     mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
     Negative_Setup();
     mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
-    
+    mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
+    Even_Polynomial_Setup();
+    mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
+    mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
+    Uneven_Polynomial_Setup();
+    mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
+
+
 }
