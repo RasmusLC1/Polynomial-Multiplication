@@ -39,9 +39,9 @@ void Recursive_FFT_ext(complex double *input, int n, complex double *out,
     // Therefore we get the second option and our runtime becomes:
         // T(N) = Θ(n log n)
     Recursive_FFT_ext(even_values, n_half, out_even_values,
-                        out_odd_values + n_half, allocated_memory_size >> 1);
+                        out_odd_values + n_half, allocated_memory_size);
     Recursive_FFT_ext(odd_values, n_half, out_odd_values,
-                        out_odd_values + n_half, allocated_memory_size >> 1);
+                        out_odd_values + n_half, allocated_memory_size);
 
     // Compute the FFT output
     complex double tmp = 0;
@@ -64,6 +64,7 @@ void Recursive_FFT(complex double *input, int n, complex double *out) {
     // Call the actual function
     Recursive_FFT_ext(input, n, out, allocated_memory, n);
     free(allocated_memory);
+
 }
 
 // Extended IFFT function with allocated_memory parameters
@@ -96,9 +97,9 @@ void Recursive_IFFT_ext(complex double *input, int n, complex double *out,
 
     // Double recursive call, half the allocated memory since we are splitting the data
     Recursive_IFFT_ext(even_values, n_half, out_even_values,
-                        out_odd_values + n_half, allocated_memory_size >> 1);
+                        out_odd_values + n_half, allocated_memory_size);
     Recursive_IFFT_ext(odd_values, n_half, out_odd_values,
-                        out_odd_values + n_half, allocated_memory_size >> 1);
+                        out_odd_values + n_half, allocated_memory_size);
 
     // Compute the FFT output
     complex double tmp = 0;

@@ -7,8 +7,8 @@
 #include "Helper_Functions.h"
 
 void Polynomial_Multiply() {
-    int n = 128 ; // test size needs to be power 2
-    int iterations = 10000;
+    int n = 1024 ; // test size needs to be power 2
+    int iterations = 10;
     // Set up correctness meassure
     int fail = 0, success = 0;
 
@@ -94,7 +94,7 @@ void Polynomial_Multiply() {
     printf("\nn size: %d\t iterations: %d\n", n, iterations);
     printf("Successful calculations:\t%d\nWrong calculations:\t%d\n", success, fail);
     printf("standard polynomial multiplication time:\t%f seconds.\n", time_standard);
-    printf("DFT polynomial multiplication time:\t%f seconds.\n", time_dft);
+    printf("DFT polynomial multiplication time:\t\t%f seconds.\n", time_dft);
     printf("Karatsuba polynomial multiplication time:\t%f seconds.\n", time_karatsuba);
     printf("Recursive_FFT polynomial multiplication time:\t%f seconds.\n", time_fft);
     printf("Iterative_FFT polynomial multiplication time:\t%f seconds.\n", time_iterative_fft);

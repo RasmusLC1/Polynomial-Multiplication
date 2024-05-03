@@ -33,8 +33,8 @@ void Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, mpz_t* total_result){
     memset(padded_b, 0, n * sizeof(int));
     memset(polynomial_result, 0, n * sizeof(int));
 
-    int length_input1 = mpz_to_int_array(a, padded_a); // Assume correct implementation
-    int length_input2 = mpz_to_int_array(b, padded_b);
+    mpz_to_int_array(a, padded_a); // Assume correct implementation
+    mpz_to_int_array(b, padded_b);
 
 
     Naive_Polynomial_Multiplication(padded_a, padded_b, n, polynomial_result);
