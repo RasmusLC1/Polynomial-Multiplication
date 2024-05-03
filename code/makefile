@@ -8,7 +8,7 @@ DFT=dft
 KARATSUBA=karatsuba
 WHITEBOX=test/WhiteBox_test
 HELPER_FUNCTIONS=Helper_Functions
-STANDARD = Standard_Polynomial_multiplication
+STANDARD = Naive_Polynomial_multiplication
 
 OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o $(HELPER_FUNCTIONS).o $(STANDARD).o
 

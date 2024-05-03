@@ -1,7 +1,7 @@
-#include "Standard_Polynomial_multiplication.h"
+#include "Naive_Polynomial_Multiplication.h"
 
 
-void Standard_Polynomial_Multiplication(int *input1, int *input2, int n, int *out){
+void Naive_Polynomial_Multiplication(int *input1, int *input2, int n, int *out){
     for (int i = 0; i < n; i++) { // For each element of input1
         for (int j = 0; j < n; j++) { // For each element of input2
             out[i + j] += input1[i] * input2[j];
@@ -9,7 +9,7 @@ void Standard_Polynomial_Multiplication(int *input1, int *input2, int n, int *ou
     }
 }
 
-void Polynomial_Multiply_Standard(mpz_t a, mpz_t b, int n, mpz_t* total_result){
+void Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, mpz_t* total_result){
     
     // Check for negative numbers
     bool negative = false;
@@ -37,7 +37,7 @@ void Polynomial_Multiply_Standard(mpz_t a, mpz_t b, int n, mpz_t* total_result){
     int length_input2 = mpz_to_int_array(b, padded_b);
 
 
-    Standard_Polynomial_Multiplication(padded_a, padded_b, n, polynomial_result);
+    Naive_Polynomial_Multiplication(padded_a, padded_b, n, polynomial_result);
     // //Convert to the real number
     mpz_t temp, result, power;
 

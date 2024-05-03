@@ -2,13 +2,13 @@
 #include "iterative_fft.h"
 #include "dft.h"
 #include "karatsuba.h"
-#include "Standard_Polynomial_multiplication.h"
+#include "Naive_Polynomial_multiplication.h"
 #include "test/WhiteBox_test.h"
 #include "Helper_Functions.h"
 
 void Polynomial_Multiply() {
-    int n = 32768 ; // test size needs to be power 2
-    int iterations = 10;
+    int n = 128 ; // test size needs to be power 2
+    int iterations = 10000;
     // Set up correctness meassure
     int fail = 0, success = 0;
 
@@ -41,7 +41,7 @@ void Polynomial_Multiply() {
 
         // Standard TEST
         clock_gettime(CLOCK_MONOTONIC, &start);
-        Polynomial_Multiply_Standard(random_Value_a, random_Value_b, n, &result_standard);
+        Polynomial_Multiply_Naive(random_Value_a, random_Value_b, n, &result_standard);
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_standard += elapsed_time - time_default;
