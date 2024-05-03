@@ -10,6 +10,8 @@
         "memory": "c",
         "xstring": "c",
         "xmemory": "c",
-        "whitebox_test.h": "c"
+        "whitebox_test.h": "c",
+        "standard_polynomial_multiplication.h": "c",
+        "helper_functions.h": "c"
     }
 }

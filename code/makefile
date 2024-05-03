@@ -8,8 +8,9 @@ DFT=dft
 KARATSUBA=karatsuba
 WHITEBOX=test/WhiteBox_test
 HELPER_FUNCTIONS=Helper_Functions
+STANDARD = Standard_Polynomial_multiplication
 
-OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o $(HELPER_FUNCTIONS).o
+OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o $(HELPER_FUNCTIONS).o $(STANDARD).o
 
 all: $(PROGRAM)
 	@./$(PROGRAM)
@@ -34,6 +35,9 @@ WhiteBox_test.o: $(WHITEBOX).c $(WHITEBOX).h
 
 $(HELPER_FUNCTIONS).o: $(HELPER_FUNCTIONS).c $(HELPER_FUNCTIONS).h
 	$(CC) $(CFLAGS) -c $(HELPER_FUNCTIONS).c
+
+$(STANDARD).o: $(STANDARD).c $(STANDARD).h
+	$(CC) $(CFLAGS) -c $(STANDARD).c
 
 clean:
 	rm -f $(PROGRAM) $(OBJS)
