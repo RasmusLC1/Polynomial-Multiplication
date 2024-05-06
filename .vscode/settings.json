@@ -14,6 +14,7 @@
         "standard_polynomial_multiplication.h": "c",
         "helper_functions.h": "c",
         "naive_polynomial_multiplication.h": "c",
-        "iosfwd": "c"
+        "iosfwd": "c",
+        "format": "c"
     }
 }
