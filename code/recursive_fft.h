@@ -3,19 +3,19 @@
 #include "Helper_Functions.h"
 
 
-// Base case
-//1  if n = 1 then
-//2      return f (1)
-// Collect the even (even_values) degree terms and odd (odd_values) degree terms of f to write it as
-//3  f = even_values(x2) + x odd_values(x2).
-// // Observe that ω2 is a principal (n~2)-th root of of unity.
-//4  Recursively compute FFT( even_values, ω2) and FFT( odd_values, ω2).
-//5  for i = 0, ⋯, n − 1 do
-//6      k = 2i mod n~2
-//7      // This is to ensure that 0 ≤ k < n~2, and also note that k will be even_values.
-//8      Let β = even_values(ωk) and γ = odd_values(ωk), which were computed earlier.
-//9      Store the value f (ωi) = β + γωi.
-//10      return  f (1), . . . , f (ωn−1).
+// X0,...,N−1 ← ditfft2(x, N, s):             DFT of (x0, xs, x2s, ..., x(N-1)s):
+//     if N = 1 then
+//         X0 ← x0                                      trivial size-1 DFT base case
+//     else
+//         X0,...,N/2−1 ← ditfft2(x, N/2, 2s)             DFT of (x0, x2s, x4s, ..., x(N-2)s)
+//         XN/2,...,N−1 ← ditfft2(x+s, N/2, 2s)           DFT of (xs, xs+2s, xs+4s, ..., x(N-1)s)
+//         for k = 0 to N/2−1 do                        combine DFTs of two halves into full DFT:
+//             p ← Xk
+//             q ← exp(−2πi/N k) Xk+N/2
+//             Xk ← p + q 
+//             Xk+N/2 ← p − q
+//         end for
+//     end if
 
 void Recursive_FFT_ext(complex double *input, int n, complex double *out, complex double *allocated_memory, int allocated_memory_size);
 
