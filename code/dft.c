@@ -2,37 +2,25 @@
 
 
 
-// void DFT(complex double *in, int n, complex double *out) {
-//     // 2 nested for loops is what causes the runtime n^2
-//     for (int i = 0; i < n; i++) { // For each output element
-//         // initialise each element to 0
-//         out[i] = 0;
-//         for (int j = 0; j < n; j++) { // For each input element
-//             // Compute DFT function
-//             out[i] += in[j] * cexp(-I * TAU * j * i / n);
-//         }
-//     }
-// }
-
-
 void DFT(complex double *in, int n, complex double *out) {
-
-
-    for (int i = 0; i < n; i++) {
+    // 2 nested for loops is what causes the runtime n^2
+    for (int i = 0; i < n; i++) { // For each output element
+        // initialise each element to 0
         out[i] = 0;
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < n; j++) { // For each input element
+            // Compute DFT function
             out[i] += in[j] * cexp(-I * TAU * j * i / n);
         }
     }
-    // Python_Plotter(out, n);
-    
 }
+
+
 
 void Python_Plotter(complex double *result, int n){
     char command[1024] = "python plot.py '";
     char number[1024];
     for (int i = 0; i < n; i++) {
-        snprintf(number, sizeof(number), "%f%+fj,", creal(result[i]), cimag(result[i]));  // Change here
+        snprintf(number, sizeof(number), "%f%+fj,", creal(result[i]), cimag(result[i]));  
         strcat(command, number);
     }
     command[strlen(command) - 1] = '\'';  // Replace the last comma with a quote

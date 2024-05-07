@@ -50,7 +50,8 @@ void Loading_Screen(int iteration, int current_Iteration) {
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);  // Get terminal window size
     // Check for division with 0
     if (current_Iteration > 0) {
-        double iteration_percent = (double)current_Iteration / (double)iteration * 100;
+        double iteration_percent = (double)current_Iteration /
+                                    (double)iteration * 100;
         if (iteration_percent == floor(iteration_percent)) {
             int window_Left = w.ws_col -iteration_percent + 30; // Get the remaining window size
 
@@ -119,7 +120,8 @@ void Array_Subtraction(int *a, int *b, int length, int *result) {
     }
 }
 
-void Array_Multiplication(int *input1, int *input2, int length_input1, int length_input2, int *result) {
+void Array_Multiplication(int *input1, int *input2, int length_input1,
+                            int length_input2, int *result) {
     memset(result, 0, (length_input1 + length_input2 - 1) * sizeof(int)); // Clearing result buffer
     for (int i = 0; i < length_input1; i++) {
         for (int j = 0; j < length_input2; j++) {

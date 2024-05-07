@@ -59,7 +59,8 @@ void Recursive_FFT(complex double *input, int n, complex double *out) {
     // Assign memory outside the recursive loop to save overhead
     // We need 4 arrays, in_even, in_odd, out_even and out_odd. Therefore we need 4 * n
     int n_bitshifted = n << 2; // * 4
-    complex double *allocated_memory = (complex double *)malloc(n_bitshifted * sizeof(complex double));
+    complex double *allocated_memory = (complex double *) malloc(n_bitshifted *
+                                        sizeof(complex double));
     
     // Call the actual function
     Recursive_FFT_ext(input, n, out, allocated_memory, n);
@@ -119,7 +120,8 @@ void Recursive_IFFT_ext(complex double *input, int n, complex double *out,
 void Recursive_IFFT(complex double *input, int n, complex double *out) {
     // Assign memory outside the recursive loop to save overhead
     int n_bitshifted = n << 2; // * 4
-    complex double *allocated_memory = (complex double *)malloc(n_bitshifted * sizeof(complex double));
+    complex double *allocated_memory = (complex double *)malloc(n_bitshifted *
+                                        sizeof(complex double));
     
     // Call the actual function
     Recursive_IFFT_ext(input, n, out, allocated_memory, n);
@@ -132,7 +134,8 @@ void Recursive_IFFT(complex double *input, int n, complex double *out) {
 }
 
 
-void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* recursive_fft_total_result) {
+void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n,
+                                        mpz_t* recursive_fft_total_result) {
 
     // Check for negative numbers
     bool negative = false;
@@ -189,7 +192,8 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* recursive
         mpz_mul(result, temp, power);
 
         // Add to the total result
-        mpz_add(recursive_fft_total_result[0], recursive_fft_total_result[0], result);
+        mpz_add(recursive_fft_total_result[0],
+                recursive_fft_total_result[0], result);
         // Cleanup
         mpz_clears(temp, result, power, NULL);
    
@@ -197,7 +201,8 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n, mpz_t* recursive
 
     // Add correct sign back
     if (negative){
-        mpz_mul(recursive_fft_total_result[0], recursive_fft_total_result[0], negative_value);
+        mpz_mul(recursive_fft_total_result[0],
+                recursive_fft_total_result[0], negative_value);
         mpz_clear(negative_value);
     }
 

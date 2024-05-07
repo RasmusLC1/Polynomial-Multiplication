@@ -13,8 +13,10 @@ void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result) {
     half_length = (half_length + 1) / 2;  // Adjust half length to split correctly
 
     // Setting up variables
-    mpz_t high1, high2, low1, low2, product_low, product_middle, product_high, temp, temp2;
-    mpz_inits(high1, high2, low1, low2, product_low, product_middle, product_high, temp, temp2, NULL);
+    mpz_t high1, high2, low1, low2, product_low, product_middle,
+            product_high, temp, temp2;
+    mpz_inits(high1, high2, low1, low2, product_low, product_middle,
+                product_high, temp, temp2, NULL);
 
     // Get half the half_length of the largest number and use modulo to get remainder for rounding
     // This is the main idea of Karatsuba to split the numbers into halves
@@ -55,17 +57,20 @@ void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result) {
     mpz_add(karatsuba_result, temp, product_high);
 
     // Clear memory
-    mpz_clears(high1, high2, low1, low2, product_low, product_middle, product_high, temp, temp2, split_factor, NULL);
+    mpz_clears(high1, high2, low1, low2, product_low, product_middle,
+                product_high, temp, temp2, split_factor, NULL);
 }
 
 
 // Karatsuba multiplication for polynomials
-void Karatsuba_Polynomial(int *input1, int *input2, int length_input1, int length_input2, int *result) {
+void Karatsuba_Polynomial(int *input1, int *input2, int length_input1,
+                            int length_input2, int *result) {
     
     // Check if either number is 2 digits, if yes then multiply.
     // C is really fast for small number multiplication, so it doesn't need to check for 1 digit
     if (length_input1 <= 2 || length_input2 <= 2) { // Base case for the smallest size
-        Array_Multiplication(input1, input2, length_input1, length_input2, result);
+        Array_Multiplication(input1, input2, length_input1,
+                                length_input2, result);
         return;
     }
     // Calculate half length
@@ -92,8 +97,10 @@ void Karatsuba_Polynomial(int *input1, int *input2, int length_input1, int lengt
     // Seperate the polynomials into highs and lows
     memcpy(low1, input1, half_length * sizeof(int));
     memcpy(low2, input2, half_length * sizeof(int));
-    memcpy(high1, input1 + half_length, (length_input1 - half_length1) * sizeof(int));
-    memcpy(high2, input2 + half_length, (length_input2 - half_length2) * sizeof(int));
+    memcpy(high1, input1 + half_length,
+            (length_input1 - half_length1) * sizeof(int));
+    memcpy(high2, input2 + half_length,
+            (length_input2 - half_length2) * sizeof(int));
     
     // First 2 recursive calls
     Karatsuba_Polynomial(low1, low2, half_length, half_length, result_low);
@@ -108,8 +115,10 @@ void Karatsuba_Polynomial(int *input1, int *input2, int length_input1, int lengt
     Karatsuba_Polynomial(temp1, temp2, half_length, half_length, result_middle);
 
     // Calculate middle coefficients (result_middle = result_middle - result_low - result_high)
-    Array_Subtraction(result_middle, result_low, length_input1 + length_input2 - 1, result_middle);
-    Array_Subtraction(result_middle, result_high, length_input1 + length_input2 - 1, result_middle);
+    Array_Subtraction(result_middle, result_low, length_input1 + length_input2
+                        - 1, result_middle);
+    Array_Subtraction(result_middle, result_high, length_input1 + length_input2
+                        - 1, result_middle);
 
     // Assemble final result
     // result = result_low + (result_middle << half_length1) + (result_high << (half_length1 * 2))
@@ -140,7 +149,8 @@ void Karatsuba_Polynomial(int *input1, int *input2, int length_input1, int lengt
 }
 
 
-void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_total_result) {
+void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n,
+                                    mpz_t* karatsuba_total_result) {
     
     // Check for negative numbers
     bool negative = false;
@@ -168,7 +178,8 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_tot
     int length_input2 = mpz_to_int_array(b, padded_b);
 
 
-    Karatsuba_Polynomial(padded_a, padded_b, length_input1, length_input2, karatsuba_result);
+    Karatsuba_Polynomial(padded_a, padded_b, length_input1, length_input2,
+                        karatsuba_result);
     // //Convert to the real number
     mpz_t temp, result, power;
 
@@ -191,7 +202,8 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_tot
 
     // Add correct sign back
     if (negative){
-        mpz_mul(karatsuba_total_result[0], karatsuba_total_result[0], negative_value);
+        mpz_mul(karatsuba_total_result[0], karatsuba_total_result[0],
+                negative_value);
         mpz_clear(negative_value);
     }
 

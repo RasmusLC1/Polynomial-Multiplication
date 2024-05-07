@@ -10,17 +10,18 @@ void Iterative_FFT(complex double* input, int n, complex double* output) {
     // This reorders the array elements and allows them to be merged more efficiently
     int log2n = log2(n);
 
-    for (unsigned int i = 0; i < n; ++i) {
+    for (unsigned int i = 0; i < n; i++) {
         reverse_bit = Bit_Reverse(i, log2n);
         output[i] = input[reverse_bit];
     }
 
     int fft_segment_length, fft_half_segment_length;
-    complex double unity_root_factor, segment_root_of_unity, twiddle_factor, tmp;
+    complex double unity_root_factor, segment_root_of_unity,
+                    twiddle_factor, tmp;
     // FFT computation
     // The outer loop runs log_2(n) times, but within the loops it will cover all n
     // elements, therefore the runtime is O(n log n) times.
-    for (int s = 1; s <= log2n; ++s) {
+    for (int s = 1; s <= log2n; s++) {
         fft_segment_length = 1 << s; // pow(2, s)
          // Principal root of unity for the current segment
         segment_root_of_unity = cexp(-I * TAU / fft_segment_length);
@@ -29,7 +30,7 @@ void Iterative_FFT(complex double* input, int n, complex double* output) {
             // Initialize unity root factor (ω) to 1, use 0*I to create complex number
             unity_root_factor = 1 + 0 * I;
             fft_half_segment_length = fft_segment_length >> 1; // /2
-            for (int j = 0; j < fft_half_segment_length; ++j) {
+            for (int j = 0; j < fft_half_segment_length; j++) {
                 // Twiddle factor application: https://en.wikipedia.org/wiki/Twiddle_factor
                 twiddle_factor = unity_root_factor *
                                 output[k + j + fft_half_segment_length];
@@ -53,7 +54,7 @@ void Iterative_IFFT(complex double* input, int n, complex double* output) {
     //          so instead of working with index 3, we are now working with index 6
     // This reorders the array elements and allows them to be merged more efficiently
     int log2n = log2(n);
-    for (unsigned int i = 0; i < n; ++i) {
+    for (unsigned int i = 0; i < n; i++) {
         reverse_bit = Bit_Reverse(i, log2n);
         output[i] = input[reverse_bit];
     }
@@ -61,7 +62,7 @@ void Iterative_IFFT(complex double* input, int n, complex double* output) {
     int fft_segment_length, fft_half_segment_length;
     complex double unity_root_factor, segment_root_of_unity, twiddle_factor, tmp;
     // IFFT computation
-    for (int s = 1; s <= log2n; ++s) {
+    for (int s = 1; s <= log2n; s++) {
         fft_segment_length = pow(2, s);
          // Principal root of unity for the current segment
         segment_root_of_unity = cexp(I * TAU / fft_segment_length);
@@ -70,7 +71,7 @@ void Iterative_IFFT(complex double* input, int n, complex double* output) {
             // Initialize unity root factor (ω) to 1, use 0*I to create complex number
             unity_root_factor = 1 + 0 * I;
             fft_half_segment_length = fft_segment_length >> 1;
-            for (int j = 0; j < fft_half_segment_length; ++j) {
+            for (int j = 0; j < fft_half_segment_length; j++) {
                 // Twiddle factor application: https://en.wikipedia.org/wiki/Twiddle_factor
                 twiddle_factor = unity_root_factor *
                                 output[k + j + fft_half_segment_length];
@@ -94,7 +95,8 @@ void Iterative_IFFT(complex double* input, int n, complex double* output) {
 
 
 
-void polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n, mpz_t* iterative_fft_total_result) {
+void polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n,
+                                        mpz_t* iterative_fft_total_result) {
     
     // Check for negative numbers
     bool negative = false;
@@ -150,14 +152,16 @@ void polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n, mpz_t* iterative
         mpz_set_d(temp, floor(creal(fft_result[i]) + 0.5));
         mpz_mul(result, temp, power);
         // Add to the total result
-        mpz_add(iterative_fft_total_result[0], iterative_fft_total_result[0], result);
+        mpz_add(iterative_fft_total_result[0], iterative_fft_total_result[0],
+                result);
         // Cleanup
         mpz_clears(temp, result, power, NULL);
    
     }
     // Add correct sign back
     if (negative){
-        mpz_mul(iterative_fft_total_result[0], iterative_fft_total_result[0], negative_value);
+        mpz_mul(iterative_fft_total_result[0], iterative_fft_total_result[0],
+                negative_value);
         mpz_clear(negative_value);
     }
 
