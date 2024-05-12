@@ -44,7 +44,7 @@ void IDFT(complex double *in, int n, complex double *out) {
         }
         out[i] /= n; // Scale by 1/n, ensuring proper normalization
     }
-    Python_Plotter(out, n);
+    // Python_Plotter(out, n);
 }
 
 

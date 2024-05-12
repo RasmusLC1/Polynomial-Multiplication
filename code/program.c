@@ -7,6 +7,7 @@
 #include "test/Runtime_test.h"
 #include "Helper_Functions.h"
 
+
 int main() {
     printf("Welcome to Polynomial test, these tests include, Naive, DFT, Karatsuba and FFT recursive and iterative\n");
     
@@ -35,5 +36,6 @@ int main() {
             break;
         }
     }
+
     return 0;
 }

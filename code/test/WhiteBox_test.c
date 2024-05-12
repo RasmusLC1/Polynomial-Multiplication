@@ -340,19 +340,27 @@ void Uneven_Polynomial_Setup(){
 void Test_Setup(){
     mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
     Basic_Math_Setup();
+
     mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
     mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
     Zero_Setup();
+
     mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
     mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
     Large_Numbers_test_Setup();
+
     mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
     mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
     Negative_Setup();
+    
+    mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
+    mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
     Even_Polynomial_Setup();
+
     mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
     mpz_inits(global_a_value, global_b_value, global_expected_result, NULL);
     Uneven_Polynomial_Setup();
+    
     mpz_clears(global_a_value, global_b_value, global_expected_result, NULL);
 
 

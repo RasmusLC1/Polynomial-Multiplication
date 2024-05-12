@@ -19,9 +19,10 @@
     
 //     /* 3 recursive calls made to numbers approximately half the size. */
 //     z0 = karatsuba(low1, low2)
-//     z1 = karatsuba(low1 + high1, low2 + high2)
 //     z2 = karatsuba(high1, high2)
-    
+//     z1 = karatsuba(low1 + high1, low2 + high2)
+
+//     Combine the results with appropriate positional shifts
 //     return (z2 × 10 ^ (m2 × 2)) + ((z1 - z2 - z0) × 10 ^ m2) + z0
 
 void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result);
