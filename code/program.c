@@ -21,7 +21,11 @@ int main() {
         case 1:
             printf("What size m do you want to test on, n = 2^m?\n");
             scanf("%d", &m);
+            if (m > 16.9){
+                printf("Choose a number smaller than 18");
+            }
             n = pow(2, m);
+            printf("n has been set to:\t %d\n", n);
             printf("How many iterations?\n");
             scanf("%d", &iterations);
             Runtime_test(n, iterations);
