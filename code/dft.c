@@ -51,20 +51,8 @@ void IDFT(complex double *in, int n, complex double *out) {
 void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
     
     // Check for negative numbers
-    bool negative = false;
-    mpz_t negative_value;
-    // Negative check
-    if (mpz_sgn(a) < 0 && mpz_sgn(b) >= 0){
-        negative = true;
-        mpz_init(negative_value);
-        mpz_set_str(negative_value, "-1", 10);
-        mpz_mul(a, a, negative_value);
-    } else if (mpz_sgn(b) < 0 && mpz_sgn(a) >= 0){
-        negative = true;
-        mpz_init(negative_value);
-        mpz_set_str(negative_value, "-1", 10);
-        mpz_mul(b, b, negative_value);
-    }
+    bool negative = negative_check(a, b);
+
     
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
@@ -90,35 +78,17 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
     // // Apply IDFT to get the product polynomial
     IDFT(fa, n, dft_result);
 
-    // //Convert to the real number
-    mpz_t temp, result, power;
-
-    // dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
-    for (int i = 0; i < n; i++) {
-        mpz_inits(temp, result, power, NULL);
-
-        // Calculate 10^i using GMP
-        mpz_ui_pow_ui(power, 10, i);
-
-        // Convert creal(result[i]) to nearest integer and multiply by 10^i
-        mpz_set_d(temp, floor(creal(dft_result[i]) + 0.5));
-        mpz_mul(result, temp, power);
-
-        // Add to the total result
-        mpz_add(dft_total_result[0], dft_total_result[0], result);
-        // Cleanup
-        mpz_clears(temp, result, power, NULL);
-
-    }
+    //Convert to the real number
+    complex_array_to_mpz(dft_result, n, dft_total_result);
 
     if (negative){
-        mpz_mul(dft_total_result[0], dft_total_result[0], negative_value);
+        mpz_t negative_value;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(recursive_fft_total_result[0],
+                recursive_fft_total_result[0], negative_value);
         mpz_clear(negative_value);
     }
-
-        // dft_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
-
-
     return;
 
 }

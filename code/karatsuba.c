@@ -153,20 +153,8 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n,
                                     mpz_t* karatsuba_total_result) {
     
     // Check for negative numbers
-    bool negative = false;
-    mpz_t negative_value;
-    // Negative check
-    if (mpz_sgn(a) < 0 && mpz_sgn(b) >= 0){
-        negative = true;
-        mpz_init(negative_value);
-        mpz_set_str(negative_value, "-1", 10);
-        mpz_mul(a, a, negative_value);
-    } else if (mpz_sgn(b) < 0 && mpz_sgn(a) >= 0){
-        negative = true;
-        mpz_init(negative_value);
-        mpz_set_str(negative_value, "-1", 10);
-        mpz_mul(b, b, negative_value);
-    }
+    bool negative = negative_check(a, b);
+
     
     int padded_a[n], padded_b[n], karatsuba_result[n];
 
@@ -181,29 +169,16 @@ void polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n,
     Karatsuba_Polynomial(padded_a, padded_b, length_input1, length_input2,
                         karatsuba_result);
     // //Convert to the real number
-    mpz_t temp, result, power;
+    int_array_to_mpz(karatsuba_result, n, karatsuba_total_result);
 
-    // The below for loop is calculating the following line using GMP
-    // FFT_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
-    for (int i = 0; i < n; i++) {
-        mpz_inits(temp, result, power, NULL);
-        // Calculate 10^i using GMP
-        mpz_ui_pow_ui(power, 10, i);
-
-        // Convert creal(result[i]) to nearest integer and multiply by 10^i
-        mpz_set_d(temp, floor(creal(karatsuba_result[i]) + 0.5));
-        mpz_mul(result, temp, power);
-
-        // Add to the total result
-        mpz_add(karatsuba_total_result[0], karatsuba_total_result[0], result);
-        // Cleanup
-        mpz_clears(temp, result, power, NULL);
-    }
 
     // Add correct sign back
     if (negative){
-        mpz_mul(karatsuba_total_result[0], karatsuba_total_result[0],
-                negative_value);
+        mpz_t negative_value;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(recursive_fft_total_result[0],
+                recursive_fft_total_result[0], negative_value);
         mpz_clear(negative_value);
     }
 

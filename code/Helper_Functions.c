@@ -34,6 +34,50 @@ int mpz_to_int_array(mpz_t input_int, int *output_array) {
     return i;
 }
 
+void int_array_to_mpz(int *polynomial_result, int n, mpz_t* total_result){
+    // //Convert to the real number
+    mpz_t temp, result, power;
+
+    // The below for loop is calculating the following line using GMP
+    // FFT_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
+    for (int i = 0; i < n; i++) {
+        mpz_inits(temp, result, power, NULL);
+        // Calculate 10^i using GMP
+        mpz_ui_pow_ui(power, 10, i);
+
+        // Convert creal(result[i]) to nearest integer and multiply by 10^i
+        mpz_set_d(temp, floor(creal(polynomial_result[i]) + 0.5));
+        mpz_mul(result, temp, power);
+
+        // Add to the total result
+        mpz_add(total_result[0], total_result[0], result);
+        // Cleanup
+        mpz_clears(temp, result, power, NULL);
+    }
+}
+
+void complex_array_to_mpz(complex double *polynomial_result, int n, mpz_t* total_result){
+    // //Convert to the real number
+    mpz_t temp, result, power;
+
+    // The below for loop is calculating the following line using GMP
+    // FFT_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
+    for (int i = 0; i < n; i++) {
+        mpz_inits(temp, result, power, NULL);
+        // Calculate 10^i using GMP
+        mpz_ui_pow_ui(power, 10, i);
+
+        // Convert creal(result[i]) to nearest integer and multiply by 10^i
+        mpz_set_d(temp, floor(creal(polynomial_result[i]) + 0.5));
+        mpz_mul(result, temp, power);
+
+        // Add to the total result
+        mpz_add(total_result[0], total_result[0], result);
+        // Cleanup
+        mpz_clears(temp, result, power, NULL);
+    }
+}
+
 
 void Int_to_Array(long long input_int, complex double *output_array){
     int i = 0;
@@ -41,6 +85,24 @@ void Int_to_Array(long long input_int, complex double *output_array){
         output_array[i++] = input_int % 10; // Store the last digit in the array
         input_int /= 10;             // Remove the last digit from n
     }
+}
+
+bool negative_check(mpz_t a, mpz_t b){
+    bool negative = false;
+    mpz_t negative_value;
+    // Negative check
+    if (mpz_sgn(a) < 0 && mpz_sgn(b) >= 0){
+        negative = true;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(a, a, negative_value);
+    } else if (mpz_sgn(b) < 0 && mpz_sgn(a) >= 0){
+        negative = true;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(b, b, negative_value);
+    }
+    return negative;
 }
 
 
