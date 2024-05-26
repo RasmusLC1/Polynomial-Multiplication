@@ -34,8 +34,8 @@ void Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, mpz_t* total_result){
         mpz_t negative_value;
         mpz_init(negative_value);
         mpz_set_str(negative_value, "-1", 10);
-        mpz_mul(recursive_fft_total_result[0],
-                recursive_fft_total_result[0], negative_value);
+        mpz_mul(total_result[0],
+                total_result[0], negative_value);
         mpz_clear(negative_value);
     }
 
