@@ -21,21 +21,23 @@ void Runtime_test_systematic() {
 
     // Open the file in write mode ("w")
     FILE *file;
-    file = fopen("Computation_times.txt", "w");
+    file = fopen("test/Computation_times.txt", "w");
 
     // Check if the file was opened successfully
     if (file == NULL) {
         printf("Error opening file!\n");
         return 1;
     }
-    int max_n_size = 10;
+    int max_n_size = 16;
 
     // Loop through the test multiple times to allow bigger tests
     // Also allows us to test n size vs iterations and their effect
     mpz_t result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba;
+    int n_array[20];
     float naive_time_array[20], karatsuba_time_array[20], dft_time_array[20], recursive_fft_time_array[20], iterative_fft_time_array[20];
     for (int i = 1; i <= max_n_size; i++) {
         n = pow(2, i);
+        n_array[i] = n;
 
         mpz_inits(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
 
@@ -57,7 +59,9 @@ void Runtime_test_systematic() {
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_dft += elapsed_time - time_default;
-        
+        dft_time_array[i] = time_dft;
+
+
         // Recursive FFT test
         clock_gettime(CLOCK_MONOTONIC, &start);
         polynomial_multiply_Recursive_FFT(random_Value_a, random_Value_b, n, &result_recursive_fft);
@@ -66,7 +70,6 @@ void Runtime_test_systematic() {
         time_fft += elapsed_time - time_default;
         recursive_fft_time_array[i] = time_fft;
 
-        
 
         // Iterative FFT test
         clock_gettime(CLOCK_MONOTONIC, &start);
@@ -97,10 +100,17 @@ void Runtime_test_systematic() {
         mpz_clears(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
         
     }
-    
-    fprintf(file, "Naive multiplication:\t");
+    fprintf(file, "n_size:\t");
+    for (int i = 1; i <= max_n_size; i++) {
+        fprintf(file, "%d ", n_array[i]);
+    }
+    fprintf(file, "\nNaive multiplication:\t");
     for (int i = 1; i <= max_n_size; i++) {
         fprintf(file, "%f ", naive_time_array[i]);
+    }
+    fprintf(file, "\nDFT multiplication:\t");
+    for (int i = 1; i <= max_n_size; i++) {
+        fprintf(file, "%f ", dft_time_array[i]);
     }
     fprintf(file, "\nKaratsuba multiplication:\t");
     for (int i = 1; i <= max_n_size; i++) {
