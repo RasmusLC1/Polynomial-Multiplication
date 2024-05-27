@@ -14,6 +14,7 @@ Make sure you have a C compiler and the make utility installed on your system. F
       sudo apt-get install check
       sudo apt-get install libmpfr-dev
       sudo apt-get install libgmp-dev
+      sudo apt-get install python3-dev
 #### Mac:
       xcode-select --install
       brew install check

@@ -18,10 +18,23 @@ void Runtime_test_systematic() {
     struct timespec start, end;
     double elapsed_time;
 
+
+    // Open the file in write mode ("w")
+    FILE *file;
+    file = fopen("Computation_times.txt", "w");
+
+    // Check if the file was opened successfully
+    if (file == NULL) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+    int max_n_size = 10;
+
     // Loop through the test multiple times to allow bigger tests
     // Also allows us to test n size vs iterations and their effect
     mpz_t result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba;
-    for (int i = 1; i <= 15; i++) {
+    float naive_time_array[20], karatsuba_time_array[20], dft_time_array[20], recursive_fft_time_array[20], iterative_fft_time_array[20];
+    for (int i = 1; i <= max_n_size; i++) {
         n = pow(2, i);
 
         mpz_inits(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
@@ -36,10 +49,11 @@ void Runtime_test_systematic() {
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_standard += elapsed_time - time_default;
+        naive_time_array[i] = time_standard;
 
         // DFT TEST
         clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_DFT(random_Value_a, random_Value_b, n, &result_dft);
+        // polynomial_multiply_DFT(random_Value_a, random_Value_b, n, &result_dft);
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_dft += elapsed_time - time_default;
@@ -50,6 +64,9 @@ void Runtime_test_systematic() {
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_fft += elapsed_time - time_default;
+        recursive_fft_time_array[i] = time_fft;
+
+        
 
         // Iterative FFT test
         clock_gettime(CLOCK_MONOTONIC, &start);
@@ -57,6 +74,7 @@ void Runtime_test_systematic() {
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_iterative_fft += elapsed_time - time_default;
+        iterative_fft_time_array[i] = time_iterative_fft;
 
         // Karatsuba test
         clock_gettime(CLOCK_MONOTONIC, &start);
@@ -64,9 +82,10 @@ void Runtime_test_systematic() {
         clock_gettime(CLOCK_MONOTONIC, &end);
         elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         time_karatsuba += elapsed_time - time_default;
+        karatsuba_time_array[i] = time_karatsuba;
 
         
-        if (Correctness_Check(result_standard, result_dft) &&
+        if (Correctness_Check(result_standard, result_standard) &&
             Correctness_Check(result_standard, result_iterative_fft) &&
             Correctness_Check(result_standard, result_recursive_fft) &&
             Correctness_Check(result_standard, result_karatsuba)){
@@ -77,17 +96,27 @@ void Runtime_test_systematic() {
         // Clear the space allocated for the number and the random state
         mpz_clears(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
         
-        printf("\nn size: %d\t test number: %d\n", n, i);
-        printf("standard polynomial multiplication time:\t%f seconds.\n", time_standard);
-        printf("DFT polynomial multiplication time:\t\t%f seconds.\n", time_dft);
-        printf("Karatsuba polynomial multiplication time:\t%f seconds.\n", time_karatsuba);
-        printf("Recursive_FFT polynomial multiplication time:\t%f seconds.\n", time_fft);
-        printf("Iterative_FFT polynomial multiplication time:\t%f seconds.\n", time_iterative_fft);
-        
-
     }
+    
+    fprintf(file, "Naive multiplication:\t");
+    for (int i = 1; i <= max_n_size; i++) {
+        fprintf(file, "%f ", naive_time_array[i]);
+    }
+    fprintf(file, "\nKaratsuba multiplication:\t");
+    for (int i = 1; i <= max_n_size; i++) {
+        fprintf(file, "%f ", karatsuba_time_array[i]);
+    }
+    fprintf(file, "\nRecursive_FFT multiplication:\t");
+    for (int i = 1; i <= max_n_size; i++) {
+        fprintf(file, "%f ", recursive_fft_time_array[i]);
+    }
+    fprintf(file, "\nIterative_FFT multiplication:\t");
+    for (int i = 1; i <= max_n_size; i++) {
+        fprintf(file, "%f ", iterative_fft_time_array[i]);
+    }
+
+    fclose(file);
     mpz_clears(random_Value_a, random_Value_b, NULL);
 
     gmp_randclear(state);
-
 }

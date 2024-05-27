@@ -1,6 +1,7 @@
 #ifndef karatsuba_H
 #define karatsuba_H
 #include "Helper_Functions.h"
+#include "Naive_Polynomial_Multiplication.h"
 
 //PseudoCode from Wiki
 
