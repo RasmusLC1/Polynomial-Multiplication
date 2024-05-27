@@ -8,10 +8,11 @@ DFT=dft
 KARATSUBA=karatsuba
 WHITEBOX=test/WhiteBox_test
 RUNTIME=test/Runtime_test
+RUNTIME_SYSTEMATIC = test/Runtime_test_systematic
 HELPER_FUNCTIONS=Helper_Functions
 STANDARD = Naive_Polynomial_multiplication
 
-OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o Runtime_test.o $(HELPER_FUNCTIONS).o $(STANDARD).o
+OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o Runtime_test.o Runtime_test_systematic.o $(HELPER_FUNCTIONS).o $(STANDARD).o
 
 all: $(PROGRAM)
 	@./$(PROGRAM)
@@ -36,6 +37,9 @@ WhiteBox_test.o: $(WHITEBOX).c $(WHITEBOX).h
 
 Runtime_test.o: $(RUNTIME).c $(RUNTIME).h
 	$(CC) $(CFLAGS) -c $(RUNTIME).c
+
+Runtime_test_systematic.o: $(RUNTIME_SYSTEMATIC).c $(RUNTIME_SYSTEMATIC).h
+	$(CC) $(CFLAGS) -c $(RUNTIME_SYSTEMATIC).c
 
 $(HELPER_FUNCTIONS).o: $(HELPER_FUNCTIONS).c $(HELPER_FUNCTIONS).h
 	$(CC) $(CFLAGS) -c $(HELPER_FUNCTIONS).c

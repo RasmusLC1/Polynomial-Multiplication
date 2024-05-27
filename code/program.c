@@ -5,6 +5,7 @@
 #include "Naive_Polynomial_multiplication.h"
 #include "test/WhiteBox_test.h"
 #include "test/Runtime_test.h"
+#include "test/Runtime_test_systematic.h"
 #include "Helper_Functions.h"
 
 
@@ -14,7 +15,7 @@ int main() {
     int input_number = 0;
     int n, m, iterations;
     while (1){
-        printf("What do you want to test, write 1 for runtime test or 2 for unit test or 3 to exit\n");
+        printf("What do you want to test, write 1 for runtime test or 2 for unit test or 3 to compare times, 4 to exit\n");
         scanf("%d", &input_number);
 
         switch (input_number){
@@ -34,8 +35,10 @@ int main() {
             Test_Setup();
             break;
         case 3:
-            exit(0);
+            Runtime_test_systematic();
             break;
+        case 4:
+            exit(0);
         default:
             break;
         }

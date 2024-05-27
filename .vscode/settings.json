@@ -16,6 +16,7 @@
         "naive_polynomial_multiplication.h": "c",
         "iosfwd": "c",
         "format": "c",
-        "initializer_list": "c"
+        "initializer_list": "c",
+        "runtime_test.h": "c"
     }
 }
