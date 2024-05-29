@@ -1,7 +1,8 @@
-#ifndef karatsuba_H
-#define karatsuba_H
-#include "Helper_Functions.h"
-#include "Naive_Polynomial_Multiplication.h"
+#ifndef karatsuba_optimisation_H
+#define karatsuba_optimisation_H
+#include "../Helper_Functions.h"
+#include "../karatsuba.h"
+#include "../Naive_Polynomial_Multiplication.h"
 
 //PseudoCode from Wiki
 
@@ -26,13 +27,11 @@
 //     Combine the results with appropriate positional shifts
 //     return (z2 × 10 ^ (m2 × 2)) + ((z1 - z2 - z0) × 10 ^ m2) + z0
 
-void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result);
+void Karatsuba_Multiply_optimised(int *input1, int *input2, int naive_switch, int length_input1,
+                            int length_input2, int *result);
 
+double measure_karatsuba_time(int* a, int* b, int naive_switch, int length1, int length2, int* result);
 
-// void Karatsuba_Recursive(int *input1, int *input2, int degree, int *result, int *temp_storage) ;
+void polynomial_multiply_karatsuba_optimisation();
 
-void Karatsuba_Multiply(int *input1, int *input2, int degree, int *result);
-
-double polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n,
-                                    mpz_t* karatsuba_total_result) ;
 #endif

@@ -1,69 +1,9 @@
-#include "karatsuba.h"
+#include "karatsuba_optimisation.h"
 
-
-// Recursive Karatsuba multiplication for numbers
-void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result) {
-    // Base case: if either number is small
-    if (mpz_cmp_ui(num1, 10) < 0 || mpz_cmp_ui(num2, 10) < 0) {
-        mpz_mul(karatsuba_result, num1, num2);
-        return;
-    }
-
-    int half_length = fmax(get_half_length(num1), get_half_length(num2));
-    half_length = (half_length + 1) / 2;  // Adjust half length to split correctly
-
-    // Setting up variables
-    mpz_t high1, high2, low1, low2, product_low, product_middle,
-            product_high, temp, temp2;
-    mpz_inits(high1, high2, low1, low2, product_low, product_middle,
-                product_high, temp, temp2, NULL);
-
-    // Get half the half_length of the largest number and use modulo to get remainder for rounding
-    // This is the main idea of Karatsuba to split the numbers into halves
-    // >>1 = /2
-    mpz_t split_factor;
-    mpz_init(split_factor);
-    mpz_ui_pow_ui(split_factor, 10, half_length);
-
-    // Splitting the numbers
-    mpz_fdiv_q(high1, num1, split_factor);
-    mpz_fdiv_r(low1, num1, split_factor);
-    mpz_fdiv_q(high2, num2, split_factor);
-    mpz_fdiv_r(low2, num2, split_factor);
-
-    // 3 recursive calls, which halfs the half_length each, this leads to:
-        // T(n) = 3T(n/2) + O(n)
-    // Here 3T(n/2) is the cost of the recursive calls and O(n) is the time to
-    // split and combine
-    // Using Master theorem the cost becomes O(n^{log_2^3}) since C=1 because f(n) = O(n) 
-    // So we use the first rule
-    karatsuba(low1, low2, product_low);  
-    karatsuba(high1, high2, product_high);
-
-    // Final recursive call int product_high = karatsuba(high1, high2);
-    mpz_add(temp, low1, high1);
- 
-    mpz_add(temp2, low2, high2);
-    karatsuba(temp, temp2, product_middle); 
-
-    // Calculate the final result
-    mpz_sub(product_middle, product_middle, product_low);
-    mpz_sub(product_middle, product_middle, product_high);
-    mpz_ui_pow_ui(temp, 10, half_length);
-    mpz_mul(product_middle, product_middle, temp);
-    mpz_mul(product_high, product_high, temp);
-    mpz_mul(product_high, product_high, temp);
-    mpz_add(temp, product_low, product_middle);
-    mpz_add(karatsuba_result, temp, product_high);
-
-    // Clear memory
-    mpz_clears(high1, high2, low1, low2, product_low, product_middle,
-                product_high, temp, temp2, split_factor, NULL);
-}
 
 
 // Karatsuba multiplication for polynomials
-void Karatsuba_Polynomial(int *input1, int *input2, int length_input1,
+void Karatsuba_Multiply_optimised(int *input1, int *input2, int naive_switch, int length_input1,
                             int length_input2, int *result) {
     
     // Check if either number is 2 digits, if yes then multiply.
@@ -148,12 +88,31 @@ void Karatsuba_Polynomial(int *input1, int *input2, int length_input1,
     free(temp2);
 }
 
+// Function to measure execution time of the Karatsuba function
+double measure_karatsuba_time(int* a, int* b, int naive_switch, int length1, int length2, int* result) {
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    Karatsuba_Polynomial(a, b, length1, length2, result);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    return (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+}
 
-double polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_total_result) {
-    
+void polynomial_multiply_karatsuba_optimisation() {
+    mpz_t random_Value_a, random_Value_b;
+    mpz_inits(random_Value_a, random_Value_b, NULL);
+
+    // Seed the random state with current time
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, time(NULL));
+    int n = pow(2, 18);
+
+    // Generate a random number with n bits
+    mpz_urandomb(random_Value_a, state, n);
+    mpz_urandomb(random_Value_b, state, n);
+
     // Check for negative numbers
-    bool negative = negative_check(a, b);
-
+    bool negative = negative_check(random_Value_a, random_Value_b);
 
     
     int padded_a[n], padded_b[n], karatsuba_result[n];
@@ -162,31 +121,39 @@ double polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_t
     memset(padded_b, 0, n * sizeof(int));
     memset(karatsuba_result, 0, n * sizeof(int));
 
-    int length_input1 = mpz_to_int_array(a, padded_a); // Assume correct implementation
-    int length_input2 = mpz_to_int_array(b, padded_b);
+    int length_input1 = mpz_to_int_array(random_Value_a, padded_a); // Assume correct implementation
+    int length_input2 = mpz_to_int_array(random_Value_b, padded_b);
 
-    struct timespec start, end;
-    clock_gettime(CLOCK_MONOTONIC, &start);
+    // Initialize padded_a, padded_b, karatsuba_result, length_input1, and length_input2 appropriately
 
-    Karatsuba_Polynomial(padded_a, padded_b, length_input1, length_input2,
-                        karatsuba_result);
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    double elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+    int min_naive = 1, max_naive = 1000;
+    int best_naive_switch = min_naive;
+    double lowest_time = 1000.0;
+    printf("%d\n", length_input2);
+    double current_time = measure_karatsuba_time(padded_a, padded_b, 1, length_input1, length_input2, karatsuba_result);
 
-    
-    // //Convert to the real number
-    int_array_to_mpz(karatsuba_result, n, karatsuba_total_result);
+    // while (min_naive <= max_naive) {
+    //     int mid_naive = min_naive + (max_naive - min_naive) / 2;
+        
+    //     double current_time = measure_karatsuba_time(padded_a, padded_b, mid_naive, length_input1, length_input2, karatsuba_result);
 
+    //     if (current_time < lowest_time) {
+    //         lowest_time = current_time;
+    //         best_naive_switch = mid_naive;
+    //     }
 
-    // Add correct sign back
-    if (negative){
-        mpz_t negative_value;
-        mpz_init(negative_value);
-        mpz_set_str(negative_value, "-1", 10);
-        mpz_mul(karatsuba_total_result[0],
-                karatsuba_total_result[0], negative_value);
-        mpz_clear(negative_value);
-    }
+    //     // Adjust search range
+    //     if (measure_karatsuba_time(padded_a, padded_b, mid_naive - 1, length_input1, length_input2, karatsuba_result) < current_time) {
+    //         max_naive = mid_naive - 1;
+    //     } else if (measure_karatsuba_time(padded_a, padded_b, mid_naive + 1, length_input1, length_input2, karatsuba_result) < current_time) {
+    //         min_naive = mid_naive + 1;
+    //     } else {
+    //         break; // Optimal value found
+    //     }
+    // }
 
-    return elapsed_time;
+    printf("Best naive switch: %d\n", best_naive_switch);
+    printf("Lowest time: %f seconds\n", current_time);
+
+    return;
 }

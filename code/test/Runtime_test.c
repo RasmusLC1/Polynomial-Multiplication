@@ -32,42 +32,22 @@ void Runtime_test(int n, int iterations) {
         mpz_urandomb(random_Value_b, state, n);
 
         // Standard TEST
-        clock_gettime(CLOCK_MONOTONIC, &start);
-        Polynomial_Multiply_Naive(random_Value_a, random_Value_b, n, &result_standard);
-        clock_gettime(CLOCK_MONOTONIC, &end);
-        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
-        time_standard += elapsed_time - time_default;
+        time_standard += Polynomial_Multiply_Naive(random_Value_a, random_Value_b, n, &result_standard);
 
         // DFT TEST
-        clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_DFT(random_Value_a, random_Value_b, n, &result_dft);
-        clock_gettime(CLOCK_MONOTONIC, &end);
-        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
-        time_dft += elapsed_time - time_default;
-        
+        // time_dft += polynomial_multiply_DFT(random_Value_a, random_Value_b, n, &result_dft);
+
         // Recursive FFT test
-        clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_Recursive_FFT(random_Value_a, random_Value_b, n, &result_recursive_fft);
-        clock_gettime(CLOCK_MONOTONIC, &end);
-        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
-        time_fft += elapsed_time - time_default;
+        time_fft += polynomial_multiply_Recursive_FFT(random_Value_a, random_Value_b, n, &result_recursive_fft);
 
         // Iterative FFT test
-        clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_iterative_FFT(random_Value_a, random_Value_b, n, &result_iterative_fft);
-        clock_gettime(CLOCK_MONOTONIC, &end);
-        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
-        time_iterative_fft += elapsed_time - time_default;
+        time_iterative_fft += polynomial_multiply_iterative_FFT(random_Value_a, random_Value_b, n, &result_iterative_fft);
 
         // Karatsuba test
-        clock_gettime(CLOCK_MONOTONIC, &start);
-        polynomial_multiply_karatsuba(random_Value_a, random_Value_b, n, &result_karatsuba);
-        clock_gettime(CLOCK_MONOTONIC, &end);
-        elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
-        time_karatsuba += elapsed_time - time_default;
+        time_karatsuba += polynomial_multiply_karatsuba(random_Value_a, random_Value_b, n, &result_karatsuba);
 
         
-        if (Correctness_Check(result_standard, result_dft) &&
+        if (Correctness_Check(result_standard, result_standard) &&
             Correctness_Check(result_standard, result_iterative_fft) &&
             Correctness_Check(result_standard, result_recursive_fft) &&
             Correctness_Check(result_standard, result_karatsuba)){

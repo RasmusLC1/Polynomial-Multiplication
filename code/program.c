@@ -5,6 +5,7 @@
 #include "Naive_Polynomial_multiplication.h"
 #include "test/WhiteBox_test.h"
 #include "test/Runtime_test.h"
+#include "test/karatsuba_optimisation.h"
 #include "test/Runtime_test_systematic.h"
 #include "Helper_Functions.h"
 
@@ -38,6 +39,8 @@ int main() {
             Runtime_test_systematic();
             break;
         case 4:
+            polynomial_multiply_karatsuba_optimisation();
+        case 5:
             exit(0);
         default:
             break;

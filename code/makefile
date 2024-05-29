@@ -10,9 +10,10 @@ WHITEBOX=test/WhiteBox_test
 RUNTIME=test/Runtime_test
 RUNTIME_SYSTEMATIC = test/Runtime_test_systematic
 HELPER_FUNCTIONS=Helper_Functions
+KARATSUBA_OPTIMSATION = test/karatsuba_optimisation
 STANDARD = Naive_Polynomial_multiplication
 
-OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o Runtime_test.o Runtime_test_systematic.o $(HELPER_FUNCTIONS).o $(STANDARD).o
+OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o Runtime_test.o Runtime_test_systematic.o karatsuba_optimisation.o $(HELPER_FUNCTIONS).o $(STANDARD).o 
 
 all: $(PROGRAM)
 	@./$(PROGRAM)
@@ -46,6 +47,9 @@ $(HELPER_FUNCTIONS).o: $(HELPER_FUNCTIONS).c $(HELPER_FUNCTIONS).h
 
 $(STANDARD).o: $(STANDARD).c $(STANDARD).h
 	$(CC) $(CFLAGS) -c $(STANDARD).c
+
+karatsuba_optimisation.o: $(KARATSUBA_OPTIMSATION).c $(KARATSUBA_OPTIMSATION).h
+	$(CC) $(CFLAGS) -c $(KARATSUBA_OPTIMSATION).c
 
 clean:
 	rm -f $(PROGRAM) $(OBJS)

@@ -134,7 +134,7 @@ void Recursive_IFFT(complex double *input, int n, complex double *out) {
 }
 
 
-void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n,
+double polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n,
                                         mpz_t* recursive_fft_total_result) {
 
     // Check for negative numbers
@@ -153,6 +153,8 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n,
 
     // // Apply FFT to both polynomials
     complex double fa[n], fb[n];
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
     Recursive_FFT(padded_a, n, fa);
     Recursive_FFT(padded_b, n, fb);
 
@@ -163,6 +165,11 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n,
 
     // // Apply IFFT to get the product polynomial
     Recursive_IFFT(fa, n, fft_result);
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    double elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+    
 
     // //Convert to the real number
     complex_array_to_mpz(fft_result, n, recursive_fft_total_result);
@@ -176,5 +183,5 @@ void polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n,
         mpz_clear(negative_value);
     }
 
-    return;
+    return elapsed_time;
 }

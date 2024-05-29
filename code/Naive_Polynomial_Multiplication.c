@@ -9,7 +9,7 @@ void Naive_Polynomial_Multiplication(int *input1, int *input2, int n, int *out){
     }
 }
 
-void Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, mpz_t* total_result){
+double Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, mpz_t* total_result){
     
     // Check for negative numbers
     bool negative = negative_check(a, b);
@@ -24,8 +24,12 @@ void Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, mpz_t* total_result){
     mpz_to_int_array(a, padded_a); // Assume correct implementation
     mpz_to_int_array(b, padded_b);
 
-
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
     Naive_Polynomial_Multiplication(padded_a, padded_b, n, polynomial_result);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    double elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+
     // Convert to the real number
     int_array_to_mpz(polynomial_result, n, total_result);
 
@@ -39,5 +43,5 @@ void Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, mpz_t* total_result){
         mpz_clear(negative_value);
     }
 
-    return;
+    return elapsed_time;
 }

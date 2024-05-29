@@ -48,7 +48,7 @@ void IDFT(complex double *in, int n, complex double *out) {
 }
 
 
-void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
+double polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
     
     // Check for negative numbers
     bool negative = negative_check(a, b);
@@ -67,6 +67,8 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
 
     // // Apply DFT to both polynomials
     complex double fa[n], fb[n];
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
     DFT(padded_a, n, fa);
     DFT(padded_b, n, fb);
 
@@ -77,6 +79,10 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
 
     // // Apply IDFT to get the product polynomial
     IDFT(fa, n, dft_result);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    double elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+    
 
     //Convert to the real number
     complex_array_to_mpz(dft_result, n, dft_total_result);
@@ -88,6 +94,6 @@ void polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
         mpz_mul(dft_total_result[0], dft_total_result[0], negative_value);
         mpz_clear(negative_value);
     }
-    return;
+    return elapsed_time;
 
 }

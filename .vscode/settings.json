@@ -17,6 +17,9 @@
         "iosfwd": "c",
         "format": "c",
         "initializer_list": "c",
-        "runtime_test.h": "c"
+        "runtime_test.h": "c",
+        "karatsuba.h": "c",
+        "karatsuba_optimisation.h": "c",
+        "runtime_test_systematic.h": "c"
     }
 }
