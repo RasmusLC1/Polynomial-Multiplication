@@ -2,7 +2,7 @@
 
 void Runtime_test_systematic() {
     // Set up correctness meassure
-    int fail = 0, success = 0, n = 0;
+    int fail = 0, n = 0;
 
     mpz_t random_Value_a, random_Value_b;
     mpz_inits(random_Value_a, random_Value_b, NULL);
@@ -13,10 +13,8 @@ void Runtime_test_systematic() {
     gmp_randseed_ui(state, time(NULL));
 
     // Set up timers
-    double time_default = 0.0, time_standard = 0.0, time_dft = 0.0, time_fft = 0.0,
+    double time_naive = 0.0, time_dft = 0.0, time_fft = 0.0,
             time_iterative_fft = 0.0, time_karatsuba = 0.0;
-    struct timespec start, end;
-    double elapsed_time;
 
 
     // Open the file in write mode ("w")
@@ -26,7 +24,7 @@ void Runtime_test_systematic() {
     // Check if the file was opened successfully
     if (file == NULL) {
         printf("Error opening file!\n");
-        return 1;
+        exit(1);
     }
     int max_n_size = 16;
 
@@ -46,8 +44,8 @@ void Runtime_test_systematic() {
         mpz_urandomb(random_Value_b, state, n);
 
         // Standard TEST
-        time_standard = Polynomial_Multiply_Naive(random_Value_a, random_Value_b, n, &result_standard);
-        naive_time_array[i] = time_standard;
+        time_naive = Polynomial_Multiply_Naive(random_Value_a, random_Value_b, n, &result_standard);
+        naive_time_array[i] = time_naive;
 
         // DFT TEST
         // time_dft = polynomial_multiply_DFT(random_Value_a, random_Value_b, n, &result_dft);

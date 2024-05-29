@@ -40,6 +40,7 @@ int main() {
             break;
         case 4:
             polynomial_multiply_karatsuba_optimisation();
+            break;
         case 5:
             exit(0);
         default:

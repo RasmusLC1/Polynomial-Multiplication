@@ -65,25 +65,19 @@ void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result) {
 // Karatsuba multiplication for polynomials
 void Karatsuba_Polynomial(int *input1, int *input2, int length_input1,
                             int length_input2, int *result) {
-    
     // Check if either number is 2 digits, if yes then multiply.
     // C is really fast for small number multiplication, so it doesn't need to check for 1 digit
-    if (length_input1 <= 12 || length_input2 <= 12) { // Base case for the smallest size
+    if (length_input1 <= 250 || length_input2 <= 250) { // Base case for the smallest size
         Array_Multiplication(input1, input2, length_input1,
                                 length_input2, result);
         return;
     }
     // Calculate half length
-    int half_length1 = (length_input1 >> 1) + (length_input1 % 2);
-    int half_length2 = (length_input2 >> 1) + (length_input2 % 2);
+    int half_length1 = (length_input1 + 1) >> 1; // Equivalent to ceil(length_input1 / 2)
+    int half_length2 = (length_input2 + 1) >> 1; // Equivalent to ceil(length_input2 / 2)
 
-    // Find the longest number and set it to half length
-    int half_length;
-    if (half_length1 >= half_length2) {
-        half_length = half_length1;
-    } else {
-        half_length = half_length2;
-    }
+    // Find the longest half length
+    int half_length = (half_length1 > half_length2) ? half_length1 : half_length2;
 
     // Allocate memory
     int *low1 = calloc(half_length, sizeof(int));
