@@ -1,12 +1,13 @@
 #include "Helper_Functions.h"
 
 
-void mpz_to_complex_array(mpz_t input_int, complex double *output_array) {
-    // Convert mpz_t to a string
-    char *int_str = mpz_get_str(NULL, 10, input_int); // Base 10 representation
+int mpz_to_complex_array(mpz_t input_int, complex double *output_array) {
+    // Convert mpz_t to a string in base 10
+    char *int_str = mpz_get_str(NULL, 10, input_int);
     int len = strlen(int_str);
 
     // Store digits in reverse order
+    int i;
     for (int i = 0; i < len; i++) {
         // Convert character to integer (digit)
         int digit = int_str[len - 1 - i] - '0'; // Reverse the index to store in reverse order
@@ -15,18 +16,19 @@ void mpz_to_complex_array(mpz_t input_int, complex double *output_array) {
 
     // Free the allocated string
     free(int_str);
+    return i;
 }
 
 int mpz_to_int_array(mpz_t input_int, int *output_array) {
-    // Convert mpz_t to a string
-    char *int_str = mpz_get_str(NULL, 10, input_int); // Base 10 representation
+    // Convert mpz_t to a string in base 10
+    char *int_str = mpz_get_str(NULL, 10, input_int);
     int len = strlen(int_str);
     int i;
     // Store digits in reverse order
     for (i = 0; i < len; i++) {
         // Convert character to integer (digit)
         int digit = int_str[len - 1 - i] - '0'; // Reverse the index to store in reverse order
-        output_array[i] = digit; // Store as complex double, imaginary part is 0
+        output_array[i] = digit;
     }
 
     // Free the allocated string
@@ -39,7 +41,6 @@ void int_array_to_mpz(int *polynomial_result, int n, mpz_t* total_result){
     mpz_t temp, result, power;
 
     // The below for loop is calculating the following line using GMP
-    // FFT_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
     for (int i = 0; i < n; i++) {
         mpz_inits(temp, result, power, NULL);
         // Calculate 10^i using GMP
@@ -61,7 +62,6 @@ void complex_array_to_mpz(complex double *polynomial_result, int n, mpz_t* total
     mpz_t temp, result, power;
 
     // The below for loop is calculating the following line using GMP
-    // FFT_total_result += (long long)(creal(result[i])+0.5)*pow(10,i);
     for (int i = 0; i < n; i++) {
         mpz_inits(temp, result, power, NULL);
         // Calculate 10^i using GMP

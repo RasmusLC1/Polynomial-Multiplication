@@ -16,7 +16,7 @@
 #define TAU 6.283185307179586
 
 
-void mpz_to_complex_array(mpz_t input_int, complex double *output_array);
+int mpz_to_complex_array(mpz_t input_int, complex double *output_array);
 
 void complex_array_to_mpz(complex double *polynomial_result, int n, mpz_t* total_result);
 

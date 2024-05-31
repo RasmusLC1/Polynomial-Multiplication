@@ -48,7 +48,7 @@ void Runtime_test_systematic() {
         naive_time_array[i] = time_naive;
 
         // DFT TEST
-        // time_dft = polynomial_multiply_DFT(random_Value_a, random_Value_b, n, &result_dft);
+        time_dft = polynomial_multiply_DFT(random_Value_a, random_Value_b, n, &result_dft);
         dft_time_array[i] = time_dft;
 
 
