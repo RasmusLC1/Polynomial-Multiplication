@@ -8,6 +8,6 @@ void DFT(complex double *in, int n, complex double *out);
 
 void IDFT(complex double *in, int n, complex double *out);
 
-double polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, int* result);
+double polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* result);
 
 #endif

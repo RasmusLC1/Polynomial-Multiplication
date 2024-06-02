@@ -44,7 +44,7 @@ void IDFT(complex double *in, int n, complex double *out) {
 }
 
 
-double polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, int* dft_total_result) {
+double polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, mpz_t* dft_total_result) {
     
     // Check for negative numbers
     bool negative = negative_check(a, b);
@@ -78,23 +78,15 @@ double polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, int* dft_total_result) {
 
     double elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
     
-    // Perform the conversion from complex double to int by extracting the real part and rounding
-    for (int i = 0; i < n; i++) {
-        dft_total_result[i] = (int)round(creal(dft_result[i]));
+    //Convert to the real number
+    complex_array_to_mpz(dft_result, n, dft_total_result);
+
+    if (negative){
+        mpz_t negative_value;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(dft_total_result[0], dft_total_result[0], negative_value);
+        mpz_clear(negative_value);
     }
-
-    
-    
-
-    // //Convert to the real number
-    // complex_array_to_mpz(dft_result, n, dft_total_result);
-
-    // if (negative){
-    //     mpz_t negative_value;
-    //     mpz_init(negative_value);
-    //     mpz_set_str(negative_value, "-1", 10);
-    //     mpz_mul(dft_total_result[0], dft_total_result[0], negative_value);
-    //     mpz_clear(negative_value);
-    // }
     return elapsed_time;
 }

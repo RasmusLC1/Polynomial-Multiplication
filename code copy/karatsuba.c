@@ -143,7 +143,7 @@ void Karatsuba_Polynomial(int *input1, int *input2, int length_input1,
 }
 
 
-double polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, int* karatsuba_total_result) {
+double polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, mpz_t* karatsuba_total_result) {
     
     // Check for negative numbers
     bool negative = negative_check(a, b);
@@ -161,24 +161,22 @@ double polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, int* karatsuba_tot
     clock_gettime(CLOCK_MONOTONIC, &start);
 
     Karatsuba_Polynomial(padded_a, padded_b, length_input1, length_input2,
-                        karatsuba_total_result);
-
-    
+                        karatsuba_result);
     clock_gettime(CLOCK_MONOTONIC, &end);
     double elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
     
-    // // //Convert to the real number
-    // int_array_to_mpz(karatsuba_result, n, karatsuba_total_result);
+    // //Convert to the real number
+    int_array_to_mpz(karatsuba_result, n, karatsuba_total_result);
 
-    // // Add correct sign back
-    // if (negative){
-    //     mpz_t negative_value;
-    //     mpz_init(negative_value);
-    //     mpz_set_str(negative_value, "-1", 10);
-    //     mpz_mul(karatsuba_total_result[0],
-    //             karatsuba_total_result[0], negative_value);
-    //     mpz_clear(negative_value);
-    // }
+    // Add correct sign back
+    if (negative){
+        mpz_t negative_value;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(karatsuba_total_result[0],
+                karatsuba_total_result[0], negative_value);
+        mpz_clear(negative_value);
+    }
 
     return elapsed_time;
 }

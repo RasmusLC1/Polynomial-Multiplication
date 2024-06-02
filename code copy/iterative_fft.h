@@ -28,4 +28,4 @@ void Iterative_FFT(complex double* input, int n, complex double* output);
 
 void Iterative_IFFT(complex double* input, int n, complex double* output);
 
-double polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n, int* iterative_fft_total_result);
+double polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n, mpz_t* iterative_fft_total_result);

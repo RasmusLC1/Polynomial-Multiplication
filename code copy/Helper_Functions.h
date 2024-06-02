@@ -34,9 +34,6 @@ bool negative_check(mpz_t a, mpz_t b);
 // Loading screen to help visualise progress
 void Loading_Screen(int iteration, int current_Iteration);
 
-// Check if two polynomials are identical
-bool Polynomial_Correctness(int* result1, int* result2, int n);
-
 // Check if two values are the same
 bool Correctness_Check(mpz_t result1, mpz_t result2);
 

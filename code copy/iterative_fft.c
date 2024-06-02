@@ -96,7 +96,7 @@ void Iterative_IFFT(complex double* input, int n, complex double* output) {
 
 
 double polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n,
-                                        int* iterative_fft_total_result) {
+                                        mpz_t* iterative_fft_total_result) {
     
     // Check for negative numbers
     bool negative = negative_check(a, b);
@@ -131,23 +131,18 @@ double polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n,
 
     double elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
     
-    // Perform the conversion from complex double to int by extracting the real part and rounding
-    for (int i = 0; i < n; i++) {
-        iterative_fft_total_result[i] = (int)round(creal(fft_result[i]));
+    //Convert to the real number
+    complex_array_to_mpz(fft_result, n, iterative_fft_total_result);
+
+    // Add correct sign back
+    if (negative){
+        mpz_t negative_value;
+        mpz_init(negative_value);
+        mpz_set_str(negative_value, "-1", 10);
+        mpz_mul(iterative_fft_total_result[0],
+                iterative_fft_total_result[0], negative_value);
+        mpz_clear(negative_value);
     }
-
-    // //Convert to the real number
-    // complex_array_to_mpz(fft_result, n, iterative_fft_total_result);
-
-    // // Add correct sign back
-    // if (negative){
-    //     mpz_t negative_value;
-    //     mpz_init(negative_value);
-    //     mpz_set_str(negative_value, "-1", 10);
-    //     mpz_mul(iterative_fft_total_result[0],
-    //             iterative_fft_total_result[0], negative_value);
-    //     mpz_clear(negative_value);
-    // }
 
     return elapsed_time;
 }

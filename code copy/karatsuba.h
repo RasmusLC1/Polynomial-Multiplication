@@ -34,5 +34,5 @@ void karatsuba(mpz_t num1, mpz_t num2, mpz_t karatsuba_result);
 void Karatsuba_Multiply(int *input1, int *input2, int degree, int *result);
 
 double polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n,
-                                    int* karatsuba_total_result) ;
+                                    mpz_t* karatsuba_total_result) ;
 #endif
