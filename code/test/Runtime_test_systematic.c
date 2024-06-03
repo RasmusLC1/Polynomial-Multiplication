@@ -5,7 +5,6 @@ void Runtime_test_systematic() {
     int fail = 0, n = 0;
 
     mpz_t random_Value_a, random_Value_b;
-    mpz_inits(random_Value_a, random_Value_b, NULL);
 
     // Seed the random state with current time
     gmp_randstate_t state;
@@ -53,7 +52,7 @@ void Runtime_test_systematic() {
         memset(iterative_FFT_result, 0, n * sizeof(int));
 
 
-        mpz_inits(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
+        mpz_inits(random_Value_a, random_Value_b, NULL);
 
         // Generate a random number with n bits
         mpz_urandomb(random_Value_a, state, n);
@@ -89,15 +88,15 @@ void Runtime_test_systematic() {
             Polynomial_Correctness(naive_result, iterative_FFT_result, n)){
                 
         }else{
+            exit(1);
         }
-        // Clear the space allocated for the number and the random state
-        mpz_clears(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
-        // Ensure to free the allocated memory when it's no longer needed
         free(naive_result);
         free(dft_result);
         free(karatsuba_result);
         free(recursive_FFT_result);
         free(iterative_FFT_result);
+        mpz_clears(random_Value_a, random_Value_b, NULL);
+
 
     }
     fprintf(file, "n_size:\t");
@@ -126,7 +125,6 @@ void Runtime_test_systematic() {
     }
 
     fclose(file);
-    mpz_clears(random_Value_a, random_Value_b, NULL);
 
     gmp_randclear(state);
 }

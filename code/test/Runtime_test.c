@@ -5,7 +5,6 @@ void Runtime_test(int n, int iterations) {
     int fail = 0, success = 0;
 
     mpz_t random_Value_a, random_Value_b;
-    mpz_inits(random_Value_a, random_Value_b, NULL);
 
     // Seed the random state with current time
     gmp_randstate_t state;
@@ -27,6 +26,8 @@ void Runtime_test(int n, int iterations) {
     
     
     for (int i = 1; i <= iterations; i++) {
+        mpz_inits(random_Value_a, random_Value_b, NULL);
+
         memset(naive_result, 0, n * sizeof(int));
         memset(karatsuba_result, 0, n * sizeof(int));
         memset(dft_result, 0, n * sizeof(int));
@@ -68,11 +69,11 @@ void Runtime_test(int n, int iterations) {
         }
         // Clear the space allocated for the number and the random state
         mpz_clears(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
-        // Loading_Screen(iterations, i);
+        Loading_Screen(iterations, i);
         
 
+        mpz_clears(random_Value_a, random_Value_b, NULL);
     }
-    mpz_clears(random_Value_a, random_Value_b, NULL);
 
     printf("\nn size: %d\t iterations: %d\n", n, iterations);
     printf("Successful calculations:\t%d\nWrong calculations:\t%d\n", success, fail);

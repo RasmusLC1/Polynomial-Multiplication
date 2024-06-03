@@ -146,7 +146,6 @@ bool Correctness_Check(mpz_t result1, mpz_t result2) {
 
 bool Polynomial_Correctness(int* result1, int* result2, int n){
     for (int i = 0; i < n; i++){
-        // printf("round: %d, %d, %d\n", i, result1[i], result2[i]);
         if (result1[i] != result2[i]){
             return false;
         }
