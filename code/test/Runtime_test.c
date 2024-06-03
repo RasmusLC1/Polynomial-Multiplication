@@ -64,7 +64,6 @@ void Runtime_test(int n, int iterations) {
             Polynomial_Correctness(naive_result, iterative_FFT_result, n)){
                 success++;
         }else{
-            // gmp_printf("variables: %Zd %Zd\n", random_Value_a, random_Value_b);
             fail ++;
         }
         // Clear the space allocated for the number and the random state

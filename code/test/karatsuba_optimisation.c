@@ -107,7 +107,8 @@ void polynomial_multiply_karatsuba_optimisation() {
     int best_naive_switch;
     double lowest_time;
     int average_naive = 0;
-    for (int i = 0; i < 1000; i++){
+    int iterations = 1000;
+    for (int i = 0; i < iterations; i++){
         // Generate a random number with n bits
         mpz_urandomb(random_Value_a, state, n);
         mpz_urandomb(random_Value_b, state, n);
@@ -151,7 +152,7 @@ void polynomial_multiply_karatsuba_optimisation() {
             }
         }
         average_naive += best_naive_switch;
-        printf("%d\n", i);
+        Loading_Screen(iterations, i);
     }
 
     printf("Best naive switch: %d\n", average_naive/100);

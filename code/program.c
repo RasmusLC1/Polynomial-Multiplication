@@ -16,7 +16,7 @@ int main() {
     int input_number = 0;
     int n, m, iterations;
     while (1){
-        printf("What do you want to test, write 1 for runtime test or 2 for unit test or 3 to compare times, 4 to exit\n");
+        printf("What do you want to test, write 1 for runtime test or 2 for unit test or 3 to compare times, 4 to test optimal karatsuba value, 5 to exit\n");
         scanf("%d", &input_number);
 
         switch (input_number){
