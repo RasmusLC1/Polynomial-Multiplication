@@ -18,7 +18,7 @@ int main() {
         printf("What do you want to test, write 1 for runtime test or 2 for unit test or 3 to compare times, 4 to test optimal karatsuba value, 5 to exit\n");
         
         if (scanf("%d", &input_number) != 1) {
-            fprintf(stderr, "Error reading input for iterations\n");
+            fprintf(stderr, "Error reading input for input_number\n");
             return 1;
         }
 
