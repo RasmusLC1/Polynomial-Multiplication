@@ -19,7 +19,6 @@ void Runtime_test(int n, int iterations) {
 
     // Loop through the test multiple times to allow bigger tests
     // Also allows us to test n size vs iterations and their effect
-    mpz_t result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba;
     int naive_result[n], dft_result[n], karatsuba_result[n],
         recursive_FFT_result[n], iterative_FFT_result[n];
 
@@ -27,15 +26,12 @@ void Runtime_test(int n, int iterations) {
     
     for (int i = 1; i <= iterations; i++) {
         mpz_inits(random_Value_a, random_Value_b, NULL);
-
+        // Set all the relevant memory to 0 for clean test
         memset(naive_result, 0, n * sizeof(int));
         memset(karatsuba_result, 0, n * sizeof(int));
         memset(dft_result, 0, n * sizeof(int));
         memset(recursive_FFT_result, 0, n * sizeof(int));
         memset(iterative_FFT_result, 0, n * sizeof(int));
-
-
-        mpz_inits(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
 
         // Generate a random number with n bits
         mpz_urandomb(random_Value_a, state, n);
@@ -67,8 +63,6 @@ void Runtime_test(int n, int iterations) {
         }else{
             fail ++;
         }
-        // Clear the space allocated for the number and the random state
-        mpz_clears(result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba, NULL);
         Loading_Screen(iterations, i);
         
 

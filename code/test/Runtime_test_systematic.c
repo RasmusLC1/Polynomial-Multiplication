@@ -27,9 +27,6 @@ void Runtime_test_systematic() {
     }
     int max_n_size = 16;
 
-    // Loop through the test multiple times to allow bigger tests
-    // Also allows us to test n size vs iterations and their effect
-    mpz_t result_standard, result_recursive_fft, result_iterative_fft, result_dft, result_karatsuba;
     int n_array[20];
 
 
@@ -37,6 +34,7 @@ void Runtime_test_systematic() {
     for (int i = 1; i <= max_n_size; i++) {
         n = pow(2, i);
         n_array[i] = n;
+        // Allocate memory in each iteration for new n value, could also be done with realloc
         int *naive_result = (int *)malloc(n * sizeof(int));
         int *dft_result = (int *)malloc(n * sizeof(int));
         int *karatsuba_result = (int *)malloc(n * sizeof(int));
@@ -44,7 +42,7 @@ void Runtime_test_systematic() {
         int *iterative_FFT_result = (int *)malloc(n * sizeof(int));
 
 
-
+        // Set all the relevant memory to 0 for clean test
         memset(naive_result, 0, n * sizeof(int));
         memset(karatsuba_result, 0, n * sizeof(int));
         memset(dft_result, 0, n * sizeof(int));
@@ -90,6 +88,7 @@ void Runtime_test_systematic() {
         }else{
             exit(1);
         }
+        // Free the memory so we can malloc it again and have clean data
         free(naive_result);
         free(dft_result);
         free(karatsuba_result);
@@ -97,8 +96,11 @@ void Runtime_test_systematic() {
         free(iterative_FFT_result);
         mpz_clears(random_Value_a, random_Value_b, NULL);
 
+        Loading_Screen(max_n_size, i);
+
 
     }
+    putchar('\n');
     fprintf(file, "n_size:\t");
     for (int i = 1; i <= max_n_size; i++) {
         fprintf(file, "%d ", n_array[i]);

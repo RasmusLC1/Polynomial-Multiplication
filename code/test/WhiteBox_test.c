@@ -16,8 +16,6 @@ START_TEST(Naive_test_basic_multiplication) {
     memset(global_expected_result, 0, n * sizeof(int));
     Polynomial_Multiply_Naive(global_a_value, global_b_value, n, global_expected_result);
 
-
-
     Polynomial_Multiply_Naive(global_a_value, global_b_value, n, result_naive); 
 
     if (!Polynomial_Correctness(result_naive, global_expected_result, n)) {
