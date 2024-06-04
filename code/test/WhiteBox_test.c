@@ -11,7 +11,7 @@ START_TEST(Naive_test_basic_multiplication) {
     int result_naive[n];
     memset(result_naive, 0, n * sizeof(int));
 
-    // Verify with naive approach
+    // Verify with naive approach to see if the naive approach is consistent
     int* global_expected_result = (int *)malloc(n * sizeof(int));
     memset(global_expected_result, 0, n * sizeof(int));
     Polynomial_Multiply_Naive(global_a_value, global_b_value, n, global_expected_result);
@@ -126,8 +126,6 @@ void add_basic_multiplication_tests(TCase *tc_basic) {
             snprintf(num_str_j, sizeof(num_str_j), "%d", j);
             mpz_set_str(global_a_value, num_str_i, 10);
             mpz_set_str(global_b_value, num_str_j, 10);
-
-
             Call_Test(tc_basic);
         }
     }

@@ -3,7 +3,6 @@
 void Runtime_test(int n, int iterations) {
     // Set up correctness meassure
     int fail = 0, success = 0;
-
     mpz_t random_Value_a, random_Value_b;
 
     // Seed the random state with current time
@@ -21,8 +20,6 @@ void Runtime_test(int n, int iterations) {
     // Also allows us to test n size vs iterations and their effect
     int naive_result[n], dft_result[n], karatsuba_result[n],
         recursive_FFT_result[n], iterative_FFT_result[n];
-
-    
     
     for (int i = 1; i <= iterations; i++) {
         mpz_inits(random_Value_a, random_Value_b, NULL);
@@ -53,8 +50,6 @@ void Runtime_test(int n, int iterations) {
         // Iterative FFT test
         time_iterative_fft += polynomial_multiply_iterative_FFT(random_Value_a, random_Value_b, n, iterative_FFT_result);
 
-
-        
         if (Polynomial_Correctness(naive_result, karatsuba_result, n)  &&
             Polynomial_Correctness(naive_result, dft_result, n)  &&
             Polynomial_Correctness(naive_result, recursive_FFT_result, n)  &&

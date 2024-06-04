@@ -1,3 +1,0 @@
-Implement helper function to convert interger to array to prevent stack overflow
-Implement naive approach n^2
-Implement Toom Cook n^3log(n)

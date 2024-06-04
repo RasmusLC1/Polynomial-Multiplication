@@ -1,9 +1,0 @@
-Implement Toom Cook n^3log(n)
-
-
-The polynomial in DFT is the x inside the sum and each is a root unit
-
-Specify what eactly the FFT we need to prove and what the complete proof is
-    The algorithm on input f of length n provides the result at nth root of unity
-
-Specify that it is fee

@@ -1,7 +1,5 @@
 #include "karatsuba_optimisation.h"
 
-
-
 // Karatsuba multiplication for polynomials
 void Karatsuba_Multiply_optimised(int *input1, int *input2, int naive_switch, int length_input1,
                             int length_input2, int *result) {
@@ -116,7 +114,6 @@ void polynomial_multiply_karatsuba_optimisation() {
         // Check for negative numbers
         bool negative = negative_check(random_Value_a, random_Value_b);
 
-        
         int padded_a[n], padded_b[n], karatsuba_result[n];
 
         memset(padded_a, 0, n * sizeof(int));
@@ -130,13 +127,12 @@ void polynomial_multiply_karatsuba_optimisation() {
         max_naive = 1000;
         best_naive_switch = min_naive;
         lowest_time = 1000.0;
-        
-    
+            
         while (min_naive <= max_naive) {
             int mid_naive = min_naive + (max_naive - min_naive) / 2;
             
             double current_time = measure_karatsuba_time(padded_a, padded_b, mid_naive, length_input1, length_input2, karatsuba_result);
-
+            // Check for lowest time
             if (current_time < lowest_time) {
                 lowest_time = current_time;
                 best_naive_switch = mid_naive;
@@ -155,7 +151,7 @@ void polynomial_multiply_karatsuba_optimisation() {
         Loading_Screen(iterations, i);
     }
 
-    printf("Best naive switch: %d\n", average_naive/100);
+    printf("Best naive switch: %d\n", average_naive/iterations);
     printf("Lowest time: %f seconds\n", lowest_time);
 
     return;
