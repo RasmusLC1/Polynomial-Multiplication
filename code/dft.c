@@ -83,18 +83,5 @@ double polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, int* dft_total_result) {
         dft_total_result[i] = (int)round(creal(dft_result[i]));
     }
 
-    
-    
-
-    // //Convert to the real number
-    // complex_array_to_mpz(dft_result, n, dft_total_result);
-
-    // if (negative){
-    //     mpz_t negative_value;
-    //     mpz_init(negative_value);
-    //     mpz_set_str(negative_value, "-1", 10);
-    //     mpz_mul(dft_total_result[0], dft_total_result[0], negative_value);
-    //     mpz_clear(negative_value);
-    // }
     return elapsed_time;
 }

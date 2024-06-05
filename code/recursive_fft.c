@@ -174,18 +174,6 @@ double polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n,
     for (int i = 0; i < n; i++) {
         recursive_fft_total_result[i] = (int)round(creal(fft_result[i]));
     }
-
-    // // //Convert to the real number
-    // complex_array_to_mpz(fft_result, n, recursive_fft_total_result);
-    // // Add correct sign back
-    // if (negative){
-    //     mpz_t negative_value;
-    //     mpz_init(negative_value);
-    //     mpz_set_str(negative_value, "-1", 10);
-    //     mpz_mul(recursive_fft_total_result[0],
-    //             recursive_fft_total_result[0], negative_value);
-    //     mpz_clear(negative_value);
-    // }
-
+    
     return elapsed_time;
 }

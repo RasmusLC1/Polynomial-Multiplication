@@ -28,18 +28,5 @@ double Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, int* total_result){
     clock_gettime(CLOCK_MONOTONIC, &end);
     double elapsed_time = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-    // // Convert to the real number
-    // int_array_to_mpz(polynomial_result, n, total_result);
-
-    // // Add correct sign back
-    // if (negative){
-    //     mpz_t negative_value;
-    //     mpz_init(negative_value);
-    //     mpz_set_str(negative_value, "-1", 10);
-    //     mpz_mul(total_result[0],
-    //             total_result[0], negative_value);
-    //     mpz_clear(negative_value);
-    // }
-
     return elapsed_time;
 }
