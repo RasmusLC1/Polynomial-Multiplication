@@ -45,12 +45,15 @@ void Recursive_FFT_ext(complex double *input, int n, complex double *out,
 
     // Compute the FFT output
     complex double tmp = 0;
+    complex double w = 1;
+    complex double w_n = cexp(-I * TAU / n);
     for (int k = 0; k < n_half; k++) {
         // Use defined TAU to save multiplication and calculate e^{−i*TAU*n/k​}
-        // directly to save calculations
-        tmp = cexp(-I * TAU * k / n) * out_odd_values[k];
+        // directly in tmp to save calculations
+        tmp = w * out_odd_values[k];
         out[k] = out_even_values[k] + tmp;
         out[k + n_half] = out_even_values[k] - tmp;
+        w *= w_n;
     }
 }
 
@@ -104,17 +107,17 @@ void Recursive_IFFT_ext(complex double *input, int n, complex double *out,
 
     // Compute the FFT output
     complex double tmp = 0;
+    complex double w = 1;
+    complex double w_n = cexp(I * TAU / n);
     for (int k = 0; k < n_half; k++) {
         // Use defined TAU to save multiplication and calculate e^{−i*TAU*n/k​}
         // directly in tmp to save calculations
-        tmp = cexp(I * TAU * k / n) * out_odd_values[k];
+        tmp = w * out_odd_values[k];
         out[k] = out_even_values[k] + tmp;
         out[k + n_half] = out_even_values[k] - tmp;
+        w *= w_n;
     }
 }
-
-
-
 
 // IFFT function to allocate memory and call actual IFFT function
 void Recursive_IFFT(complex double *input, int n, complex double *out) {

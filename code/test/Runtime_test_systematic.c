@@ -33,11 +33,11 @@ void Runtime_test_systematic() {
         n_array[i] = n;
         // Allocate memory in each iteration for new n value,
         // Using Realloc will cause issues if more iterations are being done
-        int *naive_result = (int *)malloc(n * sizeof(int));
-        int *dft_result = (int *)malloc(n * sizeof(int));
-        int *karatsuba_result = (int *)malloc(n * sizeof(int));
-        int *recursive_FFT_result = (int *)malloc(n * sizeof(int));
-        int *iterative_FFT_result = (int *)malloc(n * sizeof(int));
+        int* naive_result = (int *)malloc(n * sizeof(int));
+        int* dft_result = (int *)malloc(n * sizeof(int));
+        int* karatsuba_result = (int *)malloc(n * sizeof(int));
+        int* recursive_FFT_result = (int *)malloc(n * sizeof(int));
+        int* iterative_FFT_result = (int *)malloc(n * sizeof(int));
 
 
         // Set all the relevant memory to 0 for clean test
