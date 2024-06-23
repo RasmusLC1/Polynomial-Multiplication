@@ -10,8 +10,6 @@ void Naive_Polynomial_Multiplication(int *input1, int *input2, int n, int *out){
 }
 
 double Polynomial_Multiply_Naive(mpz_t a, mpz_t b, int n, int* total_result){ 
-    // Check for negative numbers
-    bool negative = negative_check(a, b);
  
     int padded_a[n], padded_b[n], polynomial_result[n];
 

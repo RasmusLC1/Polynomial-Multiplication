@@ -46,9 +46,6 @@ void IDFT(complex double *in, int n, complex double *out) {
 
 double polynomial_multiply_DFT(mpz_t a, mpz_t b, int n, int* dft_total_result) {
     
-    // Check for negative numbers
-    bool negative = negative_check(a, b);
- 
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
     // Arrays help structure the data into parts

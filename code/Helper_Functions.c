@@ -3,11 +3,10 @@
 
 int mpz_to_complex_array(mpz_t input_int, complex double *output_array) {
     // Convert mpz_t to a string in base 10
-    char *int_str = mpz_get_str(NULL, 10, input_int);
+    char* int_str = mpz_get_str(NULL, 10, input_int);
     int len = strlen(int_str);
 
     // Store digits in reverse order
-    int i;
     for (int i = 0; i < len; i++) {
         // Convert character to integer (digit)
         int digit = int_str[len - 1 - i] - '0'; // Reverse the index to store in reverse order
@@ -16,16 +15,16 @@ int mpz_to_complex_array(mpz_t input_int, complex double *output_array) {
 
     // Free the allocated string
     free(int_str);
-    return i;
+    return len;
 }
 
 int mpz_to_int_array(mpz_t input_int, int *output_array) {
     // Convert mpz_t to a string in base 10
-    char *int_str = mpz_get_str(NULL, 10, input_int);
+    char* int_str = mpz_get_str(NULL, 10, input_int);
     int len = strlen(int_str);
-    int i;
+    
     // Store digits in reverse order
-    for (i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
         // Convert character to integer (digit)
         int digit = int_str[len - 1 - i] - '0'; // Reverse the index to store in reverse order
         output_array[i] = digit;
@@ -33,7 +32,7 @@ int mpz_to_int_array(mpz_t input_int, int *output_array) {
 
     // Free the allocated string
     free(int_str);
-    return i;
+    return len;
 }
 
 void int_array_to_mpz(int *polynomial_result, int n, mpz_t* total_result){

@@ -140,9 +140,6 @@ void Recursive_IFFT(complex double *input, int n, complex double *out) {
 double polynomial_multiply_Recursive_FFT(mpz_t a, mpz_t b, int n,
                                         int* recursive_fft_total_result) {
 
-    // Check for negative numbers
-    bool negative = negative_check(a, b);
-
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean
     // Arrays help structure the data into parts

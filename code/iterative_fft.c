@@ -98,8 +98,6 @@ void Iterative_IFFT(complex double* input, int n, complex double* output) {
 double polynomial_multiply_iterative_FFT(mpz_t a, mpz_t b, int n,
                                         int* iterative_fft_total_result) {
     
-    // Check for negative numbers
-    bool negative = negative_check(a, b);
 
     // Pad the inputs with zeros, the polynomials are represented as arays
     // Padding ensures the data is clean

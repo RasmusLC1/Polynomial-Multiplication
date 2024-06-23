@@ -145,8 +145,6 @@ void Karatsuba_Polynomial(int *input1, int *input2, int length_input1,
 
 double polynomial_multiply_karatsuba(mpz_t a, mpz_t b, int n, int* karatsuba_total_result) {
     
-    // Check for negative numbers
-    bool negative = negative_check(a, b);
 
     int padded_a[n], padded_b[n], karatsuba_result[n];
 

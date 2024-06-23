@@ -25,7 +25,7 @@ df = pd.DataFrame(data)
 # Plotting
 plt.figure(figsize=(12, 8))
 
-# Defining colors for each algorithm
+# Defining colors for each algorithm, modify to add or remove new graph elements
 colors = {
     "Naive": "orange",
     "DFT": "green",
