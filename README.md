@@ -72,7 +72,7 @@ The project includes unit tests to verify correctness:
 
 make test
 
-Key Insights from the Thesis
+## Key Insights from the Thesis
 
 Algorithmic Trade-offs: While Karatsuba improves over the naive method, FFT-based methods offer the best performance for large polynomials.
 
@@ -80,15 +80,4 @@ Recursive vs. Iterative FFT: The iterative approach avoids recursion overhead an
 
 Optimization Challenges: Efficient memory allocation and cache usage significantly impact runtime performance.
 
-Author
-
-Developed by Rasmus Ladefoged as part of a Bachelor’s thesis at the University of Copenhagen.
-
-License
-
-MIT License. See LICENSE file for details.
-
-References
-
-For a detailed theoretical background, refer to the thesis: Polynomial Multiplication - Rasmus Ladefoged, University of Copenhagen (2024).
 
