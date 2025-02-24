@@ -1,10 +1,10 @@
-Polynomial Multiplication in C
+# Polynomial Multiplication in C
 
-Overview
+## Overview
 
 This project implements various polynomial multiplication algorithms in C, including naive multiplication, Karatsuba’s algorithm, and Fast Fourier Transform (FFT) methods. It is designed to evaluate and compare the efficiency of these algorithms in terms of computational performance.
 
-Features
+## Features
 
 Naive Polynomial Multiplication: A straightforward approach with O(n²) complexity.
 
@@ -18,7 +18,7 @@ Iterative FFT: An optimized non-recursive version of FFT for better efficiency.
 
 Performance Analysis: Runtime testing and correctness verification using unit tests.
 
-Installation
+## Installation
 
 Prerequisites
 
@@ -30,7 +30,7 @@ MPFR and GMP Libraries (for arbitrary precision arithmetic)
 
 Check Library (for unit testing)
 
-Compilation
+## Compilation
 
 To compile the program, run:
 
@@ -48,7 +48,7 @@ After compiling, run the program with:
 
 This executes the polynomial multiplication algorithms and displays the results along with performance metrics.
 
-File Structure
+## File Structure
 
 .
 ├── src/
@@ -66,7 +66,7 @@ File Structure
 ├── Makefile
 └── README.md
 
-Testing
+## Testing
 
 The project includes unit tests to verify correctness:
 
