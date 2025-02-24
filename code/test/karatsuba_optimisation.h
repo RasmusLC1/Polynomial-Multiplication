@@ -1,8 +1,8 @@
 #ifndef karatsuba_optimisation_H
 #define karatsuba_optimisation_H
-#include "../Helper_Functions.h"
-#include "../karatsuba.h"
-#include "../Naive_Polynomial_Multiplication.h"
+#include "../src/Helper_Functions.h"
+#include "../src/karatsuba.h"
+#include "../src/Naive_Polynomial_Multiplication.h"
 
 //PseudoCode from Wiki
 

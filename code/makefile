@@ -1,19 +1,19 @@
 CC=gcc
 CFLAGS=-Wall -pedantic -std=gnu11 -O2
 LDFLAGS=-lm -lmpfr -lgmp -lcheck -lrt -lpthread -lsubunit # Add libraries here
-PROGRAM=program
-RECURSIVE_FFT=Recursive_fft
-ITERATIVE_FFT=iterative_fft
-DFT=dft
-KARATSUBA=karatsuba
+PROGRAM=src/program
+RECURSIVE_FFT=src/Recursive_fft
+ITERATIVE_FFT=src/iterative_fft
+DFT=src/dft
+KARATSUBA=src/karatsuba
 WHITEBOX=test/WhiteBox_test
 RUNTIME=test/Runtime_test
 RUNTIME_SYSTEMATIC = test/Runtime_test_systematic
-HELPER_FUNCTIONS=Helper_Functions
+HELPER_FUNCTIONS=src/Helper_Functions
 KARATSUBA_OPTIMSATION = test/karatsuba_optimisation
-STANDARD = Naive_Polynomial_multiplication
+STANDARD = src/Naive_Polynomial_multiplication
 
-OBJS=$(DFT).o $(RECURSIVE_FFT).o $(KARATSUBA).o $(ITERATIVE_FFT).o WhiteBox_test.o Runtime_test.o Runtime_test_systematic.o karatsuba_optimisation.o $(HELPER_FUNCTIONS).o $(STANDARD).o 
+OBJS=src/dft.o src/Recursive_fft.o src/karatsuba.o src/iterative_fft.o test/WhiteBox_test.o test/Runtime_test.o test/Runtime_test_systematic.o test/karatsuba_optimisation.o src/Helper_Functions.o src/Naive_Polynomial_multiplication.o
 
 all: $(PROGRAM)
 	@./$(PROGRAM)
@@ -21,35 +21,35 @@ all: $(PROGRAM)
 $(PROGRAM): $(PROGRAM).c $(OBJS)
 	$(CC) $(CFLAGS) $(PROGRAM).c $(OBJS) -o $(PROGRAM) $(LDFLAGS)
 
-$(DFT).o: $(DFT).c $(DFT).h
-	$(CC) $(CFLAGS) -c $(DFT).c
+src/dft.o: src/dft.c src/dft.h
+	$(CC) $(CFLAGS) -c src/dft.c -o src/dft.o
 
-$(KARATSUBA).o: $(KARATSUBA).c $(KARATSUBA).h
-	$(CC) $(CFLAGS) -c $(KARATSUBA).c
+src/karatsuba.o: src/karatsuba.c src/karatsuba.h
+	$(CC) $(CFLAGS) -c src/karatsuba.c -o src/karatsuba.o
 
-$(RECURSIVE_FFT).o: $(RECURSIVE_FFT).c $(RECURSIVE_FFT).h
-	$(CC) $(CFLAGS) -c $(RECURSIVE_FFT).c
+src/Recursive_fft.o: src/Recursive_fft.c src/Recursive_fft.h
+	$(CC) $(CFLAGS) -c src/Recursive_fft.c -o src/Recursive_fft.o
 
-$(ITERATIVE_FFT).o: $(ITERATIVE_FFT).c $(ITERATIVE_FFT).h
-	$(CC) $(CFLAGS) -c $(ITERATIVE_FFT).c
+src/iterative_fft.o: src/iterative_fft.c src/iterative_fft.h
+	$(CC) $(CFLAGS) -c src/iterative_fft.c -o src/iterative_fft.o
 
-WhiteBox_test.o: $(WHITEBOX).c $(WHITEBOX).h
-	$(CC) $(CFLAGS) -c $(WHITEBOX).c
+test/WhiteBox_test.o: test/WhiteBox_test.c test/WhiteBox_test.h
+	$(CC) $(CFLAGS) -c test/WhiteBox_test.c -o test/WhiteBox_test.o
 
-Runtime_test.o: $(RUNTIME).c $(RUNTIME).h
-	$(CC) $(CFLAGS) -c $(RUNTIME).c
+test/Runtime_test.o: test/Runtime_test.c test/Runtime_test.h
+	$(CC) $(CFLAGS) -c test/Runtime_test.c -o test/Runtime_test.o
 
-Runtime_test_systematic.o: $(RUNTIME_SYSTEMATIC).c $(RUNTIME_SYSTEMATIC).h
-	$(CC) $(CFLAGS) -c $(RUNTIME_SYSTEMATIC).c
+test/Runtime_test_systematic.o: test/Runtime_test_systematic.c test/Runtime_test_systematic.h
+	$(CC) $(CFLAGS) -c test/Runtime_test_systematic.c -o test/Runtime_test_systematic.o
 
-$(HELPER_FUNCTIONS).o: $(HELPER_FUNCTIONS).c $(HELPER_FUNCTIONS).h
-	$(CC) $(CFLAGS) -c $(HELPER_FUNCTIONS).c
+src/Helper_Functions.o: src/Helper_Functions.c src/Helper_Functions.h
+	$(CC) $(CFLAGS) -c src/Helper_Functions.c -o src/Helper_Functions.o
 
-$(STANDARD).o: $(STANDARD).c $(STANDARD).h
-	$(CC) $(CFLAGS) -c $(STANDARD).c
+src/Naive_Polynomial_multiplication.o: src/Naive_Polynomial_multiplication.c src/Naive_Polynomial_multiplication.h
+	$(CC) $(CFLAGS) -c src/Naive_Polynomial_multiplication.c -o src/Naive_Polynomial_multiplication.o
 
-karatsuba_optimisation.o: $(KARATSUBA_OPTIMSATION).c $(KARATSUBA_OPTIMSATION).h
-	$(CC) $(CFLAGS) -c $(KARATSUBA_OPTIMSATION).c
+test/karatsuba_optimisation.o: test/karatsuba_optimisation.c test/karatsuba_optimisation.h
+	$(CC) $(CFLAGS) -c test/karatsuba_optimisation.c -o test/karatsuba_optimisation.o
 
 clean:
 	rm -f $(PROGRAM) $(OBJS)

@@ -11,10 +11,8 @@ void Runtime_test(int n, int iterations) {
     gmp_randseed_ui(state, time(NULL));
 
     // Set up timers
-    double time_default = 0.0, time_standard = 0.0, time_dft = 0.0, time_fft = 0.0,
+    double time_standard = 0.0, time_dft = 0.0, time_fft = 0.0,
             time_iterative_fft = 0.0, time_karatsuba = 0.0;
-    struct timespec start, end;
-    double elapsed_time;
 
     // Loop through the test multiple times to allow bigger tests
     // Also allows us to test n size vs iterations and their effect

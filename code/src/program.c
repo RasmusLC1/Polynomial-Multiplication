@@ -3,10 +3,10 @@
 #include "dft.h"
 #include "karatsuba.h"
 #include "Naive_Polynomial_multiplication.h"
-#include "test/WhiteBox_test.h"
-#include "test/Runtime_test.h"
-#include "test/karatsuba_optimisation.h"
-#include "test/Runtime_test_systematic.h"
+#include "../test/WhiteBox_test.h"
+#include "../test/Runtime_test.h"
+#include "../test/karatsuba_optimisation.h"
+#include "../test/Runtime_test_systematic.h"
 #include "Helper_Functions.h"
 
 

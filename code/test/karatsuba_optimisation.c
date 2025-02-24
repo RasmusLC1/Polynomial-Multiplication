@@ -112,7 +112,6 @@ void polynomial_multiply_karatsuba_optimisation() {
         mpz_urandomb(random_Value_b, state, n);
 
         // Check for negative numbers
-        bool negative = negative_check(random_Value_a, random_Value_b);
 
         int padded_a[n], padded_b[n], karatsuba_result[n];
 

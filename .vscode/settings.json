@@ -20,6 +20,7 @@
         "runtime_test.h": "c",
         "karatsuba.h": "c",
         "karatsuba_optimisation.h": "c",
-        "runtime_test_systematic.h": "c"
+        "runtime_test_systematic.h": "c",
+        "iterative_fft.h": "c"
     }
 }

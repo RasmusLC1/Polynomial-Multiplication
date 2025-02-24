@@ -343,7 +343,4 @@ void Test_Setup(){
     mpz_inits(global_a_value, global_b_value, NULL);
     Uneven_Polynomial_Setup();
     mpz_clears(global_a_value, global_b_value, NULL);
-    
-
-
 }
