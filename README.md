@@ -48,24 +48,23 @@ After compiling, run the program with:
 
 This executes the polynomial multiplication algorithms and displays the results along with performance metrics.
 
-## File Structure
-### A typical top-level directory layout
+### File Structure
 
-.
-├── src                     # Source files
-│   ├── Naive_Polynomial_Multiplication.c
-│   ├── karatsuba.c
-│   ├── Recursive_fft.c
-│   ├── iterative_fft.c
-│   ├── dft.c
-│   ├── Helper_Functions.c
-├── test                    # Test files
-│   ├── WhiteBox_test.c
-│   ├── Runtime_test.c
-│   ├── Runtime_test_systematic.c
-│   ├── karatsuba_optimisation.c
-├── Makefile                # Makefile for building the project
-├── README.md               # Project documentation
+    .
+    ├── src                     # Source files
+    │   ├── Naive_Polynomial_Multiplication.c
+    │   ├── karatsuba.c
+    │   ├── Recursive_fft.c
+    │   ├── iterative_fft.c
+    │   ├── dft.c
+    │   ├── Helper_Functions.c
+    ├── test                    # Test files
+    │   ├── WhiteBox_test.c
+    │   ├── Runtime_test.c
+    │   ├── Runtime_test_systematic.c
+    │   ├── karatsuba_optimisation.c
+    ├── Makefile                # Makefile for building the project
+    ├── README.md               # Project documentation
 
 ## Testing
 
